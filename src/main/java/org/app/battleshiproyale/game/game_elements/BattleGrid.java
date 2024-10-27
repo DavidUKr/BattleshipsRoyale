@@ -14,6 +14,10 @@ public class BattleGrid {
     public Lock gridLock = new ReentrantLock();
 
     @Getter
+    private boolean isFinished=false;
+    @Getter
+    private int winningTeamId=-1;
+    @Getter
     private final int x_size;
     @Getter
     private final int y_size;
@@ -101,7 +105,7 @@ public class BattleGrid {
             System.out.print("Player " + (team_id + 1) + ":");
         }
         else System.out.println("Player " + team_id + ": unknown team id");
-        if(x<x_size && x>0 && y<y_size && y>0) {
+        if(x<x_size && x>=0 && y<y_size && y>=0) {
             switch (grid[x][y]) {
                 case 0:
                     System.out.println("Already empty");
@@ -116,10 +120,19 @@ public class BattleGrid {
                 case 4:
                     grid[x][y] = 1;
                     System.out.println("Hit ship from team 1");
+                    if (check_finish(0)==1){
+                        isFinished=true;
+                        winningTeamId=1;
+                    }
                     return true;
                 case 5:
                     grid[x][y] = 2;
                     System.out.println("Hit ship from team 2");
+                    check_finish(1);
+                    if (check_finish(1)==0){
+                        isFinished=true;
+                        winningTeamId=0;
+                    }
                     return true;
                 case 6:
                     grid[x][y] = 0;
@@ -134,7 +147,7 @@ public class BattleGrid {
             }
         }
         else {
-            System.out.println("Out of bounds, try again");
+            System.out.println("Out of bounds, try again "+x+" "+y);
             return false;
         }
     }
@@ -174,5 +187,16 @@ public class BattleGrid {
         }
         output+="----------------------";
         System.out.println(output);
+    }
+    //TODO implement looking in ships array
+    private int check_finish(int team_id){
+
+        if(team_id==0 && grid[1][2]==1 && grid[2][2]==1 && grid[3][2]==1){
+            return 1;
+        }
+        if(team_id==1 && grid[6][6]==2 && grid[6][7]==2 && grid[6][8]==2){
+            return 0;
+        }
+        else return -1;
     }
 }
