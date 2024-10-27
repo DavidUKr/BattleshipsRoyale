@@ -6,8 +6,12 @@ import lombok.Setter;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BattleGrid {
+
+    public Lock gridLock = new ReentrantLock();
 
     @Getter
     private final int x_size;
@@ -16,7 +20,7 @@ public class BattleGrid {
     @Getter@Setter
     private int x_divider;
 
-    private final int[][] grid;
+    public final int[][] grid;
     /* grid code
     *  0 - discovered empty
     *  1 - discovered ship team 1
@@ -94,9 +98,9 @@ public class BattleGrid {
 
     public boolean hit(int x, int y, int team_id){
         if(team_id==0 || team_id==1) {
-            System.out.print("Team " + (team_id + 1) + ":");
+            System.out.print("Player " + (team_id + 1) + ":");
         }
-        else System.out.println("Team " + team_id + ": unknown team id");
+        else System.out.println("Player " + team_id + ": unknown team id");
         if(x<x_size && x>0 && y<y_size && y>0) {
             switch (grid[x][y]) {
                 case 0:

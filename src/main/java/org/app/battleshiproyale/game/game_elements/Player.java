@@ -1,47 +1,47 @@
 package org.app.battleshiproyale.game.game_elements;
 
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
 public class Player implements Runnable {
-    private final int playerId;
+    public final int playerId;
+    private final Random random = new Random();
+    public BattleGrid battleGrid;
 
-    public enum CellState {
-        CELL_CLICKED,
-        CELL_UNCLICKED;
+    private final Set<String> visitedCells = new HashSet<>();
 
-        public int toInt() {
-            switch (this) {
-                case CELL_CLICKED:
-                    return 1;
-                case CELL_UNCLICKED:
-                default:
-                    return 0;
-            }
-        }
-    }
-
-    public Player(int playerId) {
+    public Player(int playerId, BattleGrid grid) {
         this.playerId = playerId;
+        battleGrid = grid;
     }
     @Override
     public void run() {
-        for (int i = 0; i < BattleGame.grid.length; i++) {
-            for (int j = 0; j < BattleGame.grid[i].length; j++) {
-                BattleGame.gridLock.lock();
-                try {
-                    if (BattleGame.grid[i][j] == CellState.CELL_UNCLICKED.toInt()) {
-                        BattleGame.grid[i][j] = CellState.CELL_CLICKED.toInt();
-                        System.out.println("Player " + playerId + " destroyed the ship at (" + i + "," + j + ")");
-                    } else {
-                        System.out.println("Player " + playerId + " checked a destroyed ship at (" + i + "," + j + ")");
-                    }
-                } finally {
-                    BattleGame.gridLock.unlock();
-                }
+        int gridRows = battleGrid.grid.length;
+        int gridCols = battleGrid.grid[0].length;
 
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        while (visitedCells.size() < gridRows * gridCols) {
+            int i = random.nextInt(gridRows);
+            int j = random.nextInt(gridCols);
+            String cellKey = i + "," + j;
+
+            if (visitedCells.contains(cellKey)) {
+                continue;
+            }else{
+                visitedCells.add(cellKey);
+            }
+
+            try {
+                battleGrid.gridLock.lock();
+                battleGrid.hit(i,j, playerId);
+            } finally {
+                battleGrid.gridLock.unlock();
+            }
+
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
