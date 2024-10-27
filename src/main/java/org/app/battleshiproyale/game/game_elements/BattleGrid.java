@@ -92,7 +92,11 @@ public class BattleGrid {
         return false;
     }
 
-    public boolean hit(int x, int y){
+    public boolean hit(int x, int y, int team_id){
+        if(team_id==0 || team_id==1) {
+            System.out.print("Team " + (team_id + 1) + ":");
+        }
+        else System.out.println("Team " + team_id + ": unknown team id");
         if(x<x_size && x>0 && y<y_size && y>0) {
             switch (grid[x][y]) {
                 case 0:

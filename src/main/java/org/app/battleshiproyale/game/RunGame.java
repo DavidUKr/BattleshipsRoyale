@@ -8,14 +8,15 @@ public class RunGame {
         System.out.println("Running Game");
 
         BattleGrid battleGrid = new BattleGrid();
+        //hard coded 10x10 grid (min 0, max 9)
 
         printMap(battleGrid);
 
-        battleGrid.hit(1,1);
-        battleGrid.hit(7,1);
-        battleGrid.hit(1,7);
-        battleGrid.hit(2,2);
-        battleGrid.hit(7,6);
+        battleGrid.hit(1,1, 0);
+        battleGrid.hit(7,1, 1);
+        battleGrid.hit(1,7, 0);
+        battleGrid.hit(2,2, 1);
+        battleGrid.hit(7,6, 0);
 
         printMap(battleGrid);
 
