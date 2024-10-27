@@ -1,6 +1,7 @@
 package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
+import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
 import org.app.battleshiproyale.game.game_elements.Player;
 
 public class RunGame {
@@ -31,9 +32,13 @@ public class RunGame {
         Thread playerThread1 = new Thread(player1);
         Thread playerThread2 = new Thread(player2);
 
+        Thread renderer= new Thread(new BattlegridRenderer(battleGrid));
+
         printMap(battleGrid);
+//        renderer.start();
         StartGame(playerThread1, playerThread2);
         printMap(battleGrid);
+
         System.out.println("Winning team:"+(battleGrid.getWinningTeamId()+1));
     }
 
