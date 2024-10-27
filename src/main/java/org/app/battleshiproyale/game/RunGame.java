@@ -34,7 +34,7 @@ public class RunGame {
         printMap(battleGrid);
         StartGame(playerThread1, playerThread2);
         printMap(battleGrid);
-
+        System.out.println("Winning team:"+(battleGrid.getWinningTeamId()+1));
     }
 
     private static void printMap(BattleGrid battleGrid) {

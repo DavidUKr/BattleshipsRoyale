@@ -20,9 +20,9 @@ public class Player implements Runnable {
         int gridRows = battleGrid.grid.length;
         int gridCols = battleGrid.grid[0].length;
 
-        while (visitedCells.size() < gridRows * gridCols) {
-            int i = random.nextInt(gridRows);
-            int j = random.nextInt(gridCols);
+        while (visitedCells.size() < gridRows * gridCols && !battleGrid.isFinished()) {
+            int i = random.nextInt(gridRows-1);
+            int j = random.nextInt(gridCols-1);
             String cellKey = i + "," + j;
 
             if (visitedCells.contains(cellKey)) {
