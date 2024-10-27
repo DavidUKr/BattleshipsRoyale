@@ -9,10 +9,21 @@ public class RunGame {
 
         BattleGrid battleGrid = new BattleGrid();
 
-        BaseShip ship1=new MotherShip();
-        BaseShip ship2=new SmallShip();
+        printMap(battleGrid);
 
-        System.out.println(ship1.getLength());
-        System.out.println(ship2.getLength());
+        battleGrid.hit(1,1);
+        battleGrid.hit(7,1);
+        battleGrid.hit(1,7);
+        battleGrid.hit(2,2);
+        battleGrid.hit(7,6);
+
+        printMap(battleGrid);
+
     }
+
+    private static void printMap(BattleGrid battleGrid) {
+        battleGrid.printGrid(0);
+        battleGrid.printGrid(1);
+    }
+
 }

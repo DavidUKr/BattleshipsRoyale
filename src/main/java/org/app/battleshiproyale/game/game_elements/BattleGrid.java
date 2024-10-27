@@ -30,12 +30,12 @@ public class BattleGrid {
 
     private ArrayList<BaseShip> ships=new ArrayList<>();
 
-    public BattleGrid(int x_size, int y_size, int x_divider) {
+    public BattleGrid(){//int x_size, int y_size, int x_divider) {
         this.x_size = 10;
         this.y_size = 10;
         grid=new int[][]{
                 {3,3,3,3,3,3,3,3,3,3},
-                {5,3,4,3,3,3,3,5,3,3},
+                {7,3,4,3,3,3,3,7,3,3},
                 {3,3,4,3,3,3,3,6,3,3},
                 {3,3,4,3,3,3,3,3,3,3},
                 {3,3,3,3,3,3,3,3,3,3},
@@ -43,7 +43,7 @@ public class BattleGrid {
                 {3,3,3,3,3,3,5,5,5,3},
                 {3,6,3,3,3,3,3,3,3,3},
                 {3,3,3,3,3,3,3,3,6,3},
-                {3,3,5,3,3,3,5,3,3,3},
+                {3,3,7,3,3,3,7,3,3,3},
         };
     }
 
@@ -131,26 +131,40 @@ public class BattleGrid {
         }
     }
 
-    public String toString(int team_id){
-        String output="------------";
-        for(int j=y_size-1; j>=0; j--){
+    public void printGrid(int team_id){
+        String output="";
+        if(team_id==0){
+            output+="Team 1 view\n";
+        }
+        else if(team_id==1){
+            output+="Team 2 view\n";
+        }
+        else {
+            output = "Unknown team id";
+            return;
+        }
+
+        output+="----------------------\n";
+        for(int i=0; i<y_size; i++){
             output+="|";
-            for(int i=0; i<x_size; i++){
+            for(int j=0; j<this.x_size; j++){
                 if(grid[i][j]==0) output+=" ";
                 else if(grid[i][j]==1 || grid[i][j]==2) output+="X";
                 else if(grid[i][j]==4) {
                     if(team_id==0)
-                        output += "1";
-                    else output+= "@";
+                        output += "$";
+                    else output+= "^";
                 }
                 else if(grid[i][j]==5)
                     if(team_id==1)
-                        output += "2";
-                    else output+= "@";
-                else output+="@";
+                        output += "$";
+                    else output+= "^";
+                else output+="^";
+                output+=" ";
             }
             output+="|\n";
         }
-        return output+="------------";
+        output+="----------------------";
+        System.out.println(output);
     }
 }
