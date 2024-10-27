@@ -1,23 +1,38 @@
 package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
-import org.app.battleshiproyale.game.game_elements.ships.*;
+import org.app.battleshiproyale.game.game_elements.Player;
 
 public class RunGame {
+
+    public static Player player1;
+    public static Player player2;
+
+    public static void StartGame(Thread playerThread1, Thread playerThread2){
+        playerThread1.start();
+        playerThread2.start();
+
+        try {
+            playerThread1.join();
+            playerThread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println("Running Game");
 
         BattleGrid battleGrid = new BattleGrid();
-        //hard coded 10x10 grid (min 0, max 9)
+
+        player1 = new Player(0, battleGrid);
+        player2 = new Player(1, battleGrid);
+
+        Thread playerThread1 = new Thread(player1);
+        Thread playerThread2 = new Thread(player2);
 
         printMap(battleGrid);
-
-        battleGrid.hit(1,1, 0);
-        battleGrid.hit(7,1, 1);
-        battleGrid.hit(1,7, 0);
-        battleGrid.hit(2,2, 1);
-        battleGrid.hit(7,6, 0);
-
+        StartGame(playerThread1, playerThread2);
         printMap(battleGrid);
 
     }
