@@ -24,7 +24,7 @@ public class BattleGrid {
     @Getter@Setter
     private int x_divider;
 
-    public final int[][] grid;
+    public final GridCell[][] grid;
     /* grid code
     *  0 - discovered empty
     *  1 - discovered ship team 1
@@ -41,17 +41,17 @@ public class BattleGrid {
     public BattleGrid(){//int x_size, int y_size, int x_divider) {
         this.x_size = 10;
         this.y_size = 10;
-        grid=new int[][]{
-                {3,3,3,3,3,3,3,3,3,3},
-                {7,3,4,3,3,3,3,7,3,3},
-                {3,3,4,3,3,3,3,6,3,3},
-                {3,3,4,3,3,3,3,3,3,3},
-                {3,3,3,3,3,3,3,3,3,3},
-                {3,3,3,6,3,3,3,3,3,3},
-                {3,3,3,3,3,3,5,5,5,3},
-                {3,6,3,3,3,3,3,3,3,3},
-                {3,3,3,3,3,3,3,3,6,3},
-                {3,3,7,3,3,3,7,3,3,3},
+        grid = new GridCell[][]{
+                {new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3)},
+                {new GridCell(7), new GridCell(3), new GridCell(4), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(7), new GridCell(3), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(4), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(6), new GridCell(3), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(4), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(6), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(5), new GridCell(5), new GridCell(5), new GridCell(3)},
+                {new GridCell(3), new GridCell(6), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(6), new GridCell(3)},
+                {new GridCell(3), new GridCell(3), new GridCell(7), new GridCell(3), new GridCell(3), new GridCell(3), new GridCell(7), new GridCell(3), new GridCell(3), new GridCell(3)},
         };
     }
 
@@ -81,14 +81,14 @@ public class BattleGrid {
             if(orientation==0 && x+ship.getLength()-1<right){
                 ships.add(ship);
                 for(int i=0; i<ship.getLength(); i++){
-                    grid[x+i][y]=5;
+                    grid[x+i][y]=new GridCell(5);
                 }
                 return true;
             }
             else if(orientation==1 && y-ship.getLength()+1>0){
                 ships.add(ship);
                 for(int i=0; i<ship.getLength(); i++){
-                    grid[x][y-i]=5;
+                    grid[x][y-i]=new GridCell(5);
                 }
                 return true;
             }
@@ -106,7 +106,7 @@ public class BattleGrid {
         }
         else System.out.println("Player " + team_id + ": unknown team id");
         if(x<x_size && x>=0 && y<y_size && y>=0) {
-            switch (grid[x][y]) {
+            switch (grid[x][y].cellType) {
                 case 0:
                     System.out.println("Already empty");
                     return false;
@@ -114,11 +114,11 @@ public class BattleGrid {
                     System.out.println("Already hit");
                     return false;
                 case 3:
-                    grid[x][y] = 0;
+                    grid[x][y].cellType = 0;
                     System.out.println("Hit empty");
                     return true;
                 case 4:
-                    grid[x][y] = 1;
+                    grid[x][y].cellType = 1;
                     System.out.println("Hit ship from team 1");
                     if (check_finish(0)==1){
                         isFinished=true;
@@ -126,7 +126,7 @@ public class BattleGrid {
                     }
                     return true;
                 case 5:
-                    grid[x][y] = 2;
+                    grid[x][y].cellType = 2;
                     System.out.println("Hit ship from team 2");
                     check_finish(1);
                     if (check_finish(1)==0){
@@ -135,11 +135,11 @@ public class BattleGrid {
                     }
                     return true;
                 case 6:
-                    grid[x][y] = 0;
+                    grid[x][y].cellType = 0;
                     System.out.println("Discovered perk 1");
                     return true;
                 case 7:
-                    grid[x][y] = 0;
+                    grid[x][y].cellType = 0;
                     System.out.println("Discovered perk 2");
                     return true;
                 default:
@@ -169,14 +169,14 @@ public class BattleGrid {
         for(int i=0; i<y_size; i++){
             output+="|";
             for(int j=0; j<this.x_size; j++){
-                if(grid[i][j]==0) output+=" ";
-                else if(grid[i][j]==1 || grid[i][j]==2) output+="X";
-                else if(grid[i][j]==4) {
+                if(grid[i][j].cellType==0) output+=" ";
+                else if(grid[i][j].cellType==1 || grid[i][j].cellType==2) output+="X";
+                else if(grid[i][j].cellType==4) {
                     if(team_id==0)
                         output += "$";
                     else output+= "^";
                 }
-                else if(grid[i][j]==5)
+                else if(grid[i][j].cellType==5)
                     if(team_id==1)
                         output += "$";
                     else output+= "^";
@@ -191,10 +191,10 @@ public class BattleGrid {
     //TODO implement looking in ships array
     private int check_finish(int team_id){
 
-        if(team_id==0 && grid[1][2]==1 && grid[2][2]==1 && grid[3][2]==1){
+        if(team_id==0 && grid[1][2].cellType==1 && grid[2][2].cellType==1 && grid[3][2].cellType==1){
             return 1;
         }
-        if(team_id==1 && grid[6][6]==2 && grid[6][7]==2 && grid[6][8]==2){
+        if(team_id==1 && grid[6][6].cellType==2 && grid[6][7].cellType==2 && grid[6][8].cellType==2){
             return 0;
         }
         else return -1;

@@ -32,10 +32,10 @@ public class Player implements Runnable {
             }
 
             try {
-                battleGrid.gridLock.lock();
+                battleGrid.grid[i][j].cellLock.lock();
                 battleGrid.hit(i,j, playerId);
             } finally {
-                battleGrid.gridLock.unlock();
+                battleGrid.grid[i][j].cellLock.unlock();
             }
 
             try {
