@@ -50,6 +50,7 @@ public class BattleGrid {
                 // Initial grid setup based on your provided layout
                 if ((i == 1 && j == 1) || (i == 1 && j == 7)) cellType = 7;
                 else if (i == 6 && j >= 6 && j <= 8) cellType = 5;
+                else if (j == 2 && i >= 2 && i <= 4) cellType = 4;
                 else if (i == 2 && j == 6) cellType = 6;
                 else cellType = 3; // default to undiscovered empty
                 grid[i][j] = new GridCell(cellType);
@@ -59,12 +60,16 @@ public class BattleGrid {
 
     public boolean place_ship(BaseShip ship, int x, int y, int orientation) {
         int left, right, up = y_size, down = 0;
+        int cellType; // This will store the correct cell type for each team
+
         if (ship.getTeam_id() == 0) {
             left = 0;
             right = x_divider;
+            cellType = 4; // Set to team 1's undiscovered ship type
         } else if (ship.getTeam_id() == 1) {
             left = x_divider + 1;
             right = x_size;
+            cellType = 5; // Set to team 2's undiscovered ship type
         } else {
             System.out.println("Unknown team id");
             return false;
@@ -74,13 +79,13 @@ public class BattleGrid {
             if (orientation == 0 && x + ship.getLength() - 1 < right) {
                 ships.add(ship);
                 for (int i = 0; i < ship.getLength(); i++) {
-                    grid[x + i][y].cellType = 5;
+                    grid[x + i][y].cellType = cellType; // Assign the correct cell type
                 }
                 return true;
             } else if (orientation == 1 && y - ship.getLength() + 1 > 0) {
                 ships.add(ship);
                 for (int i = 0; i < ship.getLength(); i++) {
-                    grid[x][y - i].cellType = 5;
+                    grid[x][y - i].cellType = cellType; // Assign the correct cell type
                 }
                 return true;
             } else {
@@ -90,6 +95,7 @@ public class BattleGrid {
         }
         return false;
     }
+
 
 
     public boolean hit(int x, int y, int team_id) {
