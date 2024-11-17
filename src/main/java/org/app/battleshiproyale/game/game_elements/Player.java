@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class Player implements Runnable {
-    public final int playerId;
+    public int playerId;
     private final Random random = new Random();
     public BattleGrid battleGrid;
 
