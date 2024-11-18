@@ -41,9 +41,10 @@ public class Game {
         System.out.println("Winning team:"+(battleGrid.getWinningTeamId()+1));
     }
 
+    //TODO: Modify printing the grids, print the small grid, then the main grid.
     private static void printMap(BattleGrid battleGrid) {
-        battleGrid.printGrid(0);
-        battleGrid.printGrid(1);
+        battleGrid.printPlayerGrid(0);
+        battleGrid.printMainGrid(1);
     }
 
 }

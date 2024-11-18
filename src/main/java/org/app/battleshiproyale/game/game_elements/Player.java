@@ -1,5 +1,7 @@
 package org.app.battleshiproyale.game.game_elements;
 
+import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
