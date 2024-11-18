@@ -4,7 +4,7 @@ import org.app.battleshiproyale.game.game_elements.BattleGrid;
 import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
 import org.app.battleshiproyale.game.game_elements.Player;
 
-public class RunGame {
+public class Game {
 
     public static Player player1;
     public static Player player2;
@@ -35,7 +35,6 @@ public class RunGame {
         Thread renderer= new Thread(new BattlegridRenderer(battleGrid));
 
         printMap(battleGrid);
-//        renderer.start();
         StartGame(playerThread1, playerThread2);
         printMap(battleGrid);
 
