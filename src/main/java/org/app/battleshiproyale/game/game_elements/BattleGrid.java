@@ -24,15 +24,15 @@ public class BattleGrid {
     //private final int y_size;
     @Getter@Setter
     private int x_divider;
-
+    @Getter
     private final int MAIN_GRID_SIZE = 100;
+    @Getter
     private final int PLAYER_GRID_SIZE = 10;
-
-    // Main 100x100 grid
+    @Getter
     private final GridCell[][] mainGrid;
-
-    // 10x10 grids for each player
+    @Getter
     private final GridCell[][] player1Grid;
+    @Getter
     private final GridCell[][] player2Grid;
 
 
@@ -50,7 +50,7 @@ public class BattleGrid {
 
     private ArrayList<BaseShip> ships=new ArrayList<>();
 
-    public BattleGrid() {
+    /*public BattleGrid() {
         mainGrid = new GridCell[MAIN_GRID_SIZE][MAIN_GRID_SIZE];
         player1Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
         player2Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
@@ -67,6 +67,69 @@ public class BattleGrid {
             for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
                 player1Grid[i][j] = new GridCell(3);
                 player2Grid[i][j] = new GridCell(3);
+            }
+        }
+    } */
+
+    // This is a hard-coded grid for simulation purposes
+    public BattleGrid() {
+        mainGrid = new GridCell[MAIN_GRID_SIZE][MAIN_GRID_SIZE];
+        player1Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
+        player2Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
+
+        // Initialize the main grid with default values
+        for (int i = 0; i < MAIN_GRID_SIZE; i++) {
+            for (int j = 0; j < MAIN_GRID_SIZE; j++) {
+                mainGrid[i][j] = new GridCell(3); // 3 for undiscovered empty
+            }
+        }
+
+        // Initialize the player grids with default values
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                player1Grid[i][j] = new GridCell(3); // 3 for undiscovered empty
+                player2Grid[i][j] = new GridCell(3); // 3 for undiscovered empty
+            }
+        }
+
+        // Hard-code Player 1's grid
+        // Place a ship horizontally starting at (0,0) of length 4
+        for (int i = 0; i < 4; i++) {
+            player1Grid[0][i] = new GridCell(4); // 4 for undiscovered ship (team 1)
+        }
+
+        // Place another ship vertically starting at (5,5) of length 3
+        for (int i = 0; i < 3; i++) {
+            player1Grid[5 + i][5] = new GridCell(4); // 4 for undiscovered ship (team 1)
+        }
+
+        // Hard-code Player 2's grid
+        // Place a ship horizontally starting at (2,3) of length 5
+        for (int i = 0; i < 5; i++) {
+            player2Grid[2][3 + i] = new GridCell(5); // 5 for undiscovered ship (team 2)
+        }
+
+        // Place another ship vertically starting at (7,1) of length 2
+        for (int i = 0; i < 2; i++) {
+            player2Grid[7 + i][1] = new GridCell(5); // 5 for undiscovered ship (team 2)
+        }
+
+        // Hard-code the main grid (optional, if you want to see player grids on the main grid)
+        // Copy Player 1's grid onto the main grid at a fixed location
+        int startX1 = 10; // Top-left corner for Player 1's grid on the main grid
+        int startY1 = 10;
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                mainGrid[startX1 + i][startY1 + j] = player1Grid[i][j];
+            }
+        }
+
+        // Copy Player 2's grid onto the main grid at a fixed location
+        int startX2 = 50; // Top-left corner for Player 2's grid on the main grid
+        int startY2 = 50;
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                mainGrid[startX2 + i][startY2 + j] = player2Grid[i][j];
             }
         }
     }
@@ -127,7 +190,6 @@ public class BattleGrid {
 
         System.out.println("Ship placed successfully at: (" + x + ", " + y + ")");
 
-        // If the ship is placed successfully:
         List<int[]> shipCoordinates = new ArrayList<>();
         if (orientation == 0) { // Horizontal
             for (int i = 0; i < ship.getLength(); i++) {
