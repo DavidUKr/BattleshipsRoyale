@@ -222,6 +222,16 @@ public class BattleGrid {
         }
     }
 
+    private void markAllRemainingShipsAsDestroyed(GridCell[][] grid, int shipType) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j].cellType == shipType) {
+                    // Mark as discovered ship (1 for Team 1, 2 for Team 2)
+                    grid[i][j].cellType = (shipType == 4) ? 1 : 2;
+                }
+            }
+        }
+    }
 
     public boolean hit(int x, int y, int team_id, GridCell[][] grid, int gridWidth, int gridHeight) {
         // Validate coordinates
@@ -237,7 +247,7 @@ public class BattleGrid {
                 return false;
 
             case 1:
-            case 2:
+            case 2: // Already hit a ship
                 System.out.println("Already hit a ship at (" + x + ", " + y + ")");
                 return false;
 
@@ -252,6 +262,7 @@ public class BattleGrid {
                 if (check_finish(0) == 1) { // Check if all Team 1 ships are hit
                     isFinished = true;
                     winningTeamId = 1; // Team 2 wins
+                    markAllRemainingShipsAsDestroyed(grid, 4); // Mark remaining Team 1 ships as destroyed
                     System.out.println("Team 2 wins!");
                 }
                 return true;
@@ -262,6 +273,7 @@ public class BattleGrid {
                 if (check_finish(1) == 0) { // Check if all Team 2 ships are hit
                     isFinished = true;
                     winningTeamId = 0; // Team 1 wins
+                    markAllRemainingShipsAsDestroyed(grid, 5); // Mark remaining Team 2 ships as destroyed
                     System.out.println("Team 1 wins!");
                 }
                 return true;
@@ -281,6 +293,7 @@ public class BattleGrid {
                 return false;
         }
     }
+
 
 
 

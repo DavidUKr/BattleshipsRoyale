@@ -32,6 +32,7 @@ abstract public class BaseShip {
     }
 
     public boolean isDestroyed() {
+
         for (int[] coord : coordinates) {
             int x = coord[0];
             int y = coord[1];
