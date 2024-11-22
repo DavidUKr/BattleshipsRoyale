@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "BattleshipRoyale/api/v1/session")
+@RequestMapping(value = "/api/v1/session")
 @RequiredArgsConstructor
 public class SessionController {
 
