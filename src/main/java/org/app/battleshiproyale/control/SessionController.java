@@ -1,7 +1,7 @@
 package org.app.battleshiproyale.control;
 
 import lombok.RequiredArgsConstructor;
-import org.app.battleshiproyale.model.SessionDTO;
+import org.app.battleshiproyale.model.PlayerMapDTO;
 import org.app.battleshiproyale.service.SessionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,30 +10,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "BattleshipRoyale/api/v1/sessions")
+@RequestMapping(value = "BattleshipRoyale/api/v2/session")
 @RequiredArgsConstructor
 public class SessionController {
 
     private final SessionService sessionService;
 
-    @PostMapping(value = "/create/{player_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SessionDTO createSession(@PathVariable String player_id) {
-        return sessionService.createSession(player_id);
+    @PostMapping(value = "/join/{player_id}")
+    public ResponseEntity<String> joinBattle(@PathVariable String player_id) {
+        if (sessionService.joinPlayerToBattle(player_id)){
+            return ResponseEntity.ok("Player accepted");
+        }
+            return ResponseEntity.ok("Session full");
     }
 
-    @PostMapping(value = "/join/{sessionId}/{player_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SessionDTO joinSessionById(@PathVariable Long sessionId, @PathVariable String player_id) {
-        return sessionService.joinSessionById(sessionId, player_id);
+    @GetMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> getPlayersJoinedStatus() {
+        return ResponseEntity.ok(sessionService.getPlayersJoinedStatus());
     }
 
-    @GetMapping(value = "/free", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<SessionDTO> getFreeSessions() {
-        return sessionService.getFreeSessions();
+    @PostMapping(value = "/placeShips/{player_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> placePlayerShips(@PathVariable String player_id, @RequestBody PlayerMapDTO playerMapDTO) {
+        sessionService.placePlayerShips(player_id, playerMapDTO);
+        return ResponseEntity.ok("Ships placed");
     }
 
-    @DeleteMapping(value="/{session_id}")
-    public ResponseEntity<String> endSession(@PathVariable String session_id) {
-        sessionService.endSession(session_id);
-        return ResponseEntity.ok("Session ended");
+    @GetMapping(value = "/ready")
+    public ResponseEntity<Boolean> getPlayersReadyStatus() {
+        return ResponseEntity.ok(sessionService.getPlayersReadyStatus());
     }
 }

@@ -1,4 +1,4 @@
-package org.app.battleshiproyale.control;
+package org.app.battleshiproyale.control_multi;
 
 import lombok.RequiredArgsConstructor;
 import org.app.battleshiproyale.model.StatsDTO;
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "BattleshipRoyale/api/v1/global")
+@RequestMapping(value = "BattleshipRoyale/api/v2/global")
 @RequiredArgsConstructor
 public class GlobalController {
 
-    private final GlobalService globalService;
-
-    @GetMapping(value="", produces = MediaType.APPLICATION_JSON_VALUE)
-    public StatsDTO getGlobalStats(){
-        return globalService.getGlobalStats();
-    }
+//    private final GlobalService globalService;
+//
+//    @GetMapping(value="", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public StatsDTO getGlobalStats(){
+//        return globalService.getGlobalStats();
+//    }
 
 }

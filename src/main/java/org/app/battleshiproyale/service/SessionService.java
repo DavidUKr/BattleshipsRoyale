@@ -1,25 +1,24 @@
 package org.app.battleshiproyale.service;
 
-import org.app.battleshiproyale.model.SessionDTO;
+import org.app.battleshiproyale.model.PlayerMapDTO;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class SessionService {
-    public SessionDTO createSession(String player_id) {
-        return new SessionDTO();
+
+    public boolean joinPlayerToBattle(String playerId) {
+        return false;
     }
 
-    public SessionDTO joinSessionById(Long sessionId, String player_id) {
-        return new SessionDTO();
+    public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
+
     }
 
-    public List<SessionDTO> getFreeSessions() {
-        return null;
+    public Integer getPlayersJoinedStatus() {
+        return 0;
     }
 
-    public void endSession(String sessionId) {
-        
+    public boolean getPlayersReadyStatus() {
+        return false;
     }
 }
