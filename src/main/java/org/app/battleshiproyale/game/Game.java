@@ -9,7 +9,7 @@ public class Game {
     public static Player player1;
     public static Player player2;
 
-    public static void StartGame(Thread playerThread1, Thread playerThread2){
+    public static void startGame(Thread playerThread1, Thread playerThread2) {
         playerThread1.start();
         playerThread2.start();
 
@@ -17,6 +17,7 @@ public class Game {
             playerThread1.join();
             playerThread2.join();
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
     }
@@ -32,18 +33,26 @@ public class Game {
         Thread playerThread1 = new Thread(player1);
         Thread playerThread2 = new Thread(player2);
 
-        Thread renderer= new Thread(new BattlegridRenderer(battleGrid));
+        Thread renderer = new Thread(new BattlegridRenderer(battleGrid));
 
         printMap(battleGrid);
-        StartGame(playerThread1, playerThread2);
+
+        startGame(playerThread1, playerThread2);
+
         printMap(battleGrid);
 
-        System.out.println("Winning team:"+(battleGrid.getWinningTeamId()+1));
+        System.out.println("Winning team: " + (battleGrid.getWinningTeamId() + 1));
     }
 
     private static void printMap(BattleGrid battleGrid) {
-        battleGrid.printGrid(0);
-        battleGrid.printGrid(1);
-    }
+        System.out.println("\nPlayer 1's Grid:");
+        battleGrid.printPlayerGrid(battleGrid.getPlayer1Grid(),0);
 
+        System.out.println("\nPlayer 2's Grid:");
+        battleGrid.printPlayerGrid(battleGrid.getPlayer2Grid(),1);
+
+        System.out.println("\nMain Grid:");
+        battleGrid.printMainGrid();
+    }
 }
+

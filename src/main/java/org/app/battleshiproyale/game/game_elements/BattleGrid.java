@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,14 +18,25 @@ public class BattleGrid {
     private boolean isFinished=false;
     @Getter
     private int winningTeamId=-1;
-    @Getter
-    private final int x_size;
-    @Getter
-    private final int y_size;
+    //@Getter
+    //private final int x_size;
+    //@Getter
+    //private final int y_size;
     @Getter@Setter
     private int x_divider;
+    @Getter
+    private final int MAIN_GRID_SIZE = 100;
+    @Getter
+    private final int PLAYER_GRID_SIZE = 10;
+    @Getter
+    private final GridCell[][] mainGrid;
+    @Getter
+    private final GridCell[][] player1Grid;
+    @Getter
+    private final GridCell[][] player2Grid;
 
-    public final GridCell[][] grid;
+
+    //public final GridCell[][] grid;
     /* grid code
     *  0 - discovered empty
     *  1 - discovered ship team 1
@@ -38,170 +50,339 @@ public class BattleGrid {
 
     private ArrayList<BaseShip> ships=new ArrayList<>();
 
-    public BattleGrid() {
-        this.x_size = 10;
-        this.y_size = 10;
-        grid = new GridCell[x_size][y_size];
+    /*public BattleGrid() {
+        mainGrid = new GridCell[MAIN_GRID_SIZE][MAIN_GRID_SIZE];
+        player1Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
+        player2Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
 
-        // Initialize each cell in the grid with a specific cellType
-        for (int i = 0; i < x_size; i++) {
-            for (int j = 0; j < y_size; j++) {
-                int cellType;
-                // Initial grid setup based on your provided layout
-                if ((i == 1 && j == 1) || (i == 1 && j == 7)) cellType = 7;
-                else if (i == 6 && j >= 6 && j <= 8) cellType = 5;
-                else if (i == 2 && j == 6) cellType = 6;
-                else cellType = 3; // default to undiscovered empty
-                grid[i][j] = new GridCell(cellType);
+        // Initialize the main grid with default values
+        for (int i = 0; i < MAIN_GRID_SIZE; i++) {
+            for (int j = 0; j < MAIN_GRID_SIZE; j++) {
+                mainGrid[i][j] = new GridCell(3);  // 3 for undiscovered empty
+            }
+        }
+
+        // Initialize the player grids similarly
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                player1Grid[i][j] = new GridCell(3);
+                player2Grid[i][j] = new GridCell(3);
+            }
+        }
+    } */
+
+    // This is a hard-coded grid for simulation purposes
+    public BattleGrid() {
+        mainGrid = new GridCell[MAIN_GRID_SIZE][MAIN_GRID_SIZE];
+        player1Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
+        player2Grid = new GridCell[PLAYER_GRID_SIZE][PLAYER_GRID_SIZE];
+
+        // Initialize the main grid with default values
+        for (int i = 0; i < MAIN_GRID_SIZE; i++) {
+            for (int j = 0; j < MAIN_GRID_SIZE; j++) {
+                mainGrid[i][j] = new GridCell(3); // 3 for undiscovered empty
+            }
+        }
+
+        // Initialize the player grids with default values
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                player1Grid[i][j] = new GridCell(3); // 3 for undiscovered empty
+                player2Grid[i][j] = new GridCell(3); // 3 for undiscovered empty
+            }
+        }
+
+        // Hard-code Player 1's grid
+        // Place a ship horizontally starting at (0,0) of length 4
+        for (int i = 0; i < 4; i++) {
+            player1Grid[0][i] = new GridCell(4); // 4 for undiscovered ship (team 1)
+        }
+
+        // Place another ship vertically starting at (5,5) of length 3
+        for (int i = 0; i < 3; i++) {
+            player1Grid[5 + i][5] = new GridCell(4); // 4 for undiscovered ship (team 1)
+        }
+
+        // Hard-code Player 2's grid
+        // Place a ship horizontally starting at (2,3) of length 5
+        for (int i = 0; i < 5; i++) {
+            player2Grid[2][3 + i] = new GridCell(5); // 5 for undiscovered ship (team 2)
+        }
+
+        // Place another ship vertically starting at (7,1) of length 2
+        for (int i = 0; i < 2; i++) {
+            player2Grid[7 + i][1] = new GridCell(5); // 5 for undiscovered ship (team 2)
+        }
+
+        // Hard-code the main grid (optional, if you want to see player grids on the main grid)
+        // Copy Player 1's grid onto the main grid at a fixed location
+        int startX1 = 10; // Top-left corner for Player 1's grid on the main grid
+        int startY1 = 10;
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                mainGrid[startX1 + i][startY1 + j] = player1Grid[i][j];
+            }
+        }
+
+        // Copy Player 2's grid onto the main grid at a fixed location
+        int startX2 = 50; // Top-left corner for Player 2's grid on the main grid
+        int startY2 = 50;
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                mainGrid[startX2 + i][startY2 + j] = player2Grid[i][j];
             }
         }
     }
 
-    public boolean place_ship(BaseShip ship, int x, int y, int orientation) {
-        int left, right, up = y_size, down = 0;
-        if (ship.getTeam_id() == 0) {
-            left = 0;
-            right = x_divider;
-        } else if (ship.getTeam_id() == 1) {
-            left = x_divider + 1;
-            right = x_size;
+    public void placePlayerGridOnMain(GridCell[][] playerGrid) {
+        int startX = (int) (Math.random() * (MAIN_GRID_SIZE - PLAYER_GRID_SIZE));
+        int startY = (int) (Math.random() * (MAIN_GRID_SIZE - PLAYER_GRID_SIZE));
+
+        // Copy the player grid to the main grid
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                mainGrid[startX + i][startY + j] = playerGrid[i][j];
+            }
+        }
+    }
+
+
+    public boolean place_ship(BaseShip ship, int x, int y, int orientation, GridCell[][] grid, int gridWidth, int gridHeight) {
+        int shipLength = ship.getLength();
+
+        // Determine ship boundaries
+        if (orientation == 0) { // Horizontal
+            if (x + shipLength > gridWidth) {
+                System.out.println("Ship placement out of bounds (horizontal)");
+                return false;
+            }
+        } else if (orientation == 1) { // Vertical
+            if (y + shipLength > gridHeight) {
+                System.out.println("Ship placement out of bounds (vertical)");
+                return false;
+            }
         } else {
-            System.out.println("Unknown team id");
+            System.out.println("Invalid orientation");
             return false;
         }
 
-        if (x < right && x > left && y < up && y > down) {
-            if (orientation == 0 && x + ship.getLength() - 1 < right) {
-                ships.add(ship);
-                for (int i = 0; i < ship.getLength(); i++) {
-                    grid[x + i][y].cellType = 5;
-                }
-                return true;
-            } else if (orientation == 1 && y - ship.getLength() + 1 > 0) {
-                ships.add(ship);
-                for (int i = 0; i < ship.getLength(); i++) {
-                    grid[x][y - i].cellType = 5;
-                }
-                return true;
-            } else {
-                System.out.println("Ship " + ship + " did not fit because of length and orientation");
+        // Check for collisions
+        for (int i = 0; i < shipLength; i++) {
+            int checkX = (orientation == 0) ? x + i : x; // Horizontal or vertical
+            int checkY = (orientation == 1) ? y + i : y;
+
+            if (grid[checkX][checkY].cellType != 3) {
+                System.out.println("Collision detected at: (" + checkX + ", " + checkY + ")");
                 return false;
             }
         }
-        return false;
+
+        // Place the ship
+        int cellType = (ship.getTeam_id() == 0) ? 4 : 5; // Team 1 or Team 2
+        for (int i = 0; i < shipLength; i++) {
+            int placeX = (orientation == 0) ? x + i : x;
+            int placeY = (orientation == 1) ? y + i : y;
+
+            grid[placeX][placeY].cellType = cellType;
+        }
+
+        ships.add(ship);
+
+        System.out.println("Ship placed successfully at: (" + x + ", " + y + ")");
+
+        List<int[]> shipCoordinates = new ArrayList<>();
+        if (orientation == 0) { // Horizontal
+            for (int i = 0; i < ship.getLength(); i++) {
+                shipCoordinates.add(new int[]{x + i, y});
+            }
+        } else if (orientation == 1) { // Vertical
+            for (int i = 0; i < ship.getLength(); i++) {
+                shipCoordinates.add(new int[]{x, y - i});
+            }
+        }
+
+        // Set the ship's coordinates and grid reference
+        ship.setCoordinates(shipCoordinates);
+        //ship.setGrid(this.grid); // Assuming 'grid' is a field in `BattleGrid`
+
+        return true;
     }
 
 
-    public boolean hit(int x, int y, int team_id) {
-        if (team_id == 0 || team_id == 1) {
-            System.out.print("Player " + (team_id + 1) + ":");
-        } else System.out.println("Player " + team_id + ": unknown team id");
+    public void generatePerks(int numPerks, int perkType) {
+        int perksPlaced = 0;
+        while (perksPlaced < numPerks) {
+            int x = (int) (Math.random() * MAIN_GRID_SIZE);
+            int y = (int) (Math.random() * MAIN_GRID_SIZE);
 
-        if (x < x_size && x >= 0 && y < y_size && y >= 0) {
-            switch (grid[x][y].cellType) {
-                case 0:
-                    System.out.println("Already empty");
-                    return false;
-                case 1, 2:
-                    System.out.println("Already hit");
-                    return false;
-                case 3:
-                    grid[x][y].cellType = 0;
-                    System.out.println("Hit empty");
-                    return true;
-                case 4:
-                    grid[x][y].cellType = 1;
-                    System.out.println("Hit ship from team 1");
-                    if (check_finish(0) == 1) {
-                        isFinished = true;
-                        winningTeamId = 1;
-                    }
-                    return true;
-                case 5:
-                    grid[x][y].cellType = 2;
-                    System.out.println("Hit ship from team 2");
-                    if (check_finish(1) == 0) {
-                        isFinished = true;
-                        winningTeamId = 0;
-                    }
-                    return true;
-                case 6:
-                    grid[x][y].cellType = 0;
-                    System.out.println("Discovered perk 1");
-                    return true;
-                case 7:
-                    grid[x][y].cellType = 0;
-                    System.out.println("Discovered perk 2");
-                    return true;
-                default:
-                    return false;
+            if (mainGrid[x][y].cellType == 3) {
+                mainGrid[x][y] = new GridCell(perkType);
+                perksPlaced++;
             }
-        } else {
-            System.out.println("Out of bounds, try again " + x + " " + y);
+        }
+    }
+
+
+    public boolean hit(int x, int y, int team_id, GridCell[][] grid, int gridWidth, int gridHeight) {
+        // Validate coordinates
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
+            System.out.println("Out of bounds: (" + x + ", " + y + ")");
             return false;
         }
+
+        // Identify cell type and process hit
+        switch (grid[x][y].cellType) {
+            case 0: // Already empty
+                System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
+                return false;
+
+            case 1:
+            case 2:
+                System.out.println("Already hit a ship at (" + x + ", " + y + ")");
+                return false;
+
+            case 3: // Undiscovered empty
+                grid[x][y].cellType = 0; // Mark as discovered empty
+                System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
+                return true;
+
+            case 4: // Undiscovered ship (Team 1)
+                grid[x][y].cellType = 1; // Mark as discovered ship
+                System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
+                if (check_finish(0) == 1) { // Check if all Team 1 ships are hit
+                    isFinished = true;
+                    winningTeamId = 1; // Team 2 wins
+                    System.out.println("Team 2 wins!");
+                }
+                return true;
+
+            case 5: // Undiscovered ship (Team 2)
+                grid[x][y].cellType = 2; // Mark as discovered ship
+                System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");
+                if (check_finish(1) == 0) { // Check if all Team 2 ships are hit
+                    isFinished = true;
+                    winningTeamId = 0; // Team 1 wins
+                    System.out.println("Team 1 wins!");
+                }
+                return true;
+
+            case 6: // Perk type 1
+                grid[x][y].cellType = 0; // Mark as discovered empty
+                System.out.println("Discovered a perk (Type 1) at (" + x + ", " + y + ")");
+                return true;
+
+            case 7: // Perk type 2
+                grid[x][y].cellType = 0; // Mark as discovered empty
+                System.out.println("Discovered a perk (Type 2) at (" + x + ", " + y + ")");
+                return true;
+
+            default: // Invalid cell type
+                System.out.println("Unknown cell type at (" + x + ", " + y + ")");
+                return false;
+        }
     }
 
 
-    public void printGrid(int team_id) {
-        String output = "";
-        if (team_id == 0) {
-            output += "Team 1 view\n";
-        } else if (team_id == 1) {
-            output += "Team 2 view\n";
-        } else {
-            output = "Unknown team id";
-            return;
-        }
 
-        output += "----------------------\n";
-        for (int i = 0; i < y_size; i++) {
-            output += "|";
-            for (int j = 0; j < this.x_size; j++) {
-                if (grid[i][j].cellType == 0) output += " ";
-                else if (grid[i][j].cellType == 1 || grid[i][j].cellType == 2) output += "X";
-                else if (grid[i][j].cellType == 4) {
-                    output += (team_id == 0) ? "$" : "^";
-                } else if (grid[i][j].cellType == 5) {
-                    output += (team_id == 1) ? "$" : "^";
-                } else output += "^";
-                output += " ";
+    public void printPlayerGrid(GridCell[][] playerGrid, int team_id) {
+        StringBuilder output = new StringBuilder();
+        output.append("Team ").append(team_id + 1).append("'s Grid:\n");
+        output.append("----------------------\n");
+
+        for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
+            output.append("| ");
+            for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
+                int cellType = playerGrid[i][j].cellType;
+
+                switch (cellType) {
+                    case 0: // Discovered empty
+                        output.append(" ");
+                        break;
+                    case 1: // Discovered ship (Team 1)
+                    case 2: // Discovered ship (Team 2)
+                        output.append("X");
+                        break;
+                    case 3: // Undiscovered empty
+                        output.append(".");
+                        break;
+                    case 4: // Undiscovered ship (Team 1)
+                        output.append(team_id == 0 ? "$" : "-"); // Team 1 sees their own ships
+                        break;
+                    case 5: // Undiscovered ship (Team 2)
+                        output.append(team_id == 1 ? "$" : "-"); // Team 2 sees their own ships
+                        break;
+                    default:
+                        output.append("?"); // Unknown cell type
+                }
+                output.append(" ");
             }
-            output += "|\n";
+            output.append("|\n");
         }
-        output += "----------------------";
+        output.append("----------------------");
         System.out.println(output);
     }
 
+    public void printMainGrid() {
+        StringBuilder output = new StringBuilder();
+        output.append("Main 100x100 Grid (Admin View):\n");
+        output.append("----------------------\n");
+
+        for (int i = 0; i < MAIN_GRID_SIZE; i++) {
+            for (int j = 0; j < MAIN_GRID_SIZE; j++) {
+                int cellType = mainGrid[i][j].cellType;
+
+                switch (cellType) {
+                    case 0:
+                        output.append(" ");
+                        break;
+                    case 1:
+                    case 2:
+                        output.append("X");
+                        break;
+                    case 3:
+                        output.append(".");
+                        break;
+                    case 4:
+                    case 5:
+                        output.append("$");
+                        break;
+                    case 6:
+                    case 7:
+                        output.append("P");
+                        break;
+                    default:
+                        output.append("?");
+                }
+                output.append(" ");
+            }
+            output.append("\n");
+        }
+        System.out.println(output);
+    }
+
+
     //TODO implement looking in ships array
     private int check_finish(int team_id) {
-        boolean allTeam1ShipsHit = true;
-        boolean allTeam2ShipsHit = true;
+        boolean allTeam1ShipsDestroyed = true;
+        boolean allTeam2ShipsDestroyed = true;
 
-        for (int i = 0; i < x_size; i++) {
-            for (int j = 0; j < y_size; j++) {
-                // Check for remaining team 1 ships (undiscovered or discovered but not hit)
-                if (grid[i][j].cellType == 4) {
-                    allTeam1ShipsHit = false;
-                }
-                // Check for remaining team 2 ships (undiscovered or discovered but not hit)
-                if (grid[i][j].cellType == 5) {
-                    allTeam2ShipsHit = false;
-                }
+        for (BaseShip ship : ships) {
+            if (ship.getTeam_id() == 0 && !ship.isDestroyed()) {
+                allTeam1ShipsDestroyed = false;
+            }
+            if (ship.getTeam_id() == 1 && !ship.isDestroyed()) {
+                allTeam2ShipsDestroyed = false;
             }
         }
 
-        // If all team 1 ships are hit, team 2 wins
-        if (allTeam1ShipsHit && team_id == 0) {
-            return 1;  // Team 2 wins
+        if (allTeam1ShipsDestroyed && team_id == 0) {
+            return 1; // Team 2 wins
         }
 
-        // If all team 2 ships are hit, team 1 wins
-        if (allTeam2ShipsHit && team_id == 1) {
-            return 0;  // Team 1 wins
+        if (allTeam2ShipsDestroyed && team_id == 1) {
+            return 0; // Team 1 wins
         }
 
-        // Game is not finished
         return -1;
     }
 
