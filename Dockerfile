@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/battleshiproyale-0.0.1-SNAPSHOT.jar battleshiproyale.jar
+COPY --from=build /target/BattleshipRoyale-0.0.1-SNAPSHOT.jar BattleshipRoyale.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "battleshiproyale.jar"]
+ENTRYPOINT ["java", "-jar", "BattleshipRoyale.jar"]
