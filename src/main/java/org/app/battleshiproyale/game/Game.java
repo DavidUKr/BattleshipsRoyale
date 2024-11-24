@@ -13,9 +13,9 @@ public interface Game {
 
     boolean getAllPlayersReadyCount(); //0,1,2
 
-    GameStateDTO resetBoard();
+    GameState resetBoard(); //look into model.GameState
 
-    HitResultDTO hit(String playerId, HitDTO hitDTO);
+    HitResult hit(String playerId, HitDTO hitDTO);//look into HitResult //
 
     boolean usePerk(String playerId, PerkDTO perkDTO);
 

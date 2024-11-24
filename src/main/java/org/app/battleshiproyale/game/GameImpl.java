@@ -84,13 +84,13 @@ public class GameImpl implements Game{
     }
 
     @Override
-    public GameStateDTO resetBoard() {
+    public GameState resetBoard() {
         return null;
     }
 
     @Override
-    public HitResultDTO hit(String playerId, HitDTO hitDTO) {
-        return null;
+    public HitResult hit(String playerId, HitDTO hitDTO) {
+        return new HitResult();
     }
 
     @Override

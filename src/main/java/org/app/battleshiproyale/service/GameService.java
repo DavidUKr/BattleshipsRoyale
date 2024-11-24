@@ -15,11 +15,13 @@ public class GameService {
     private final Game game;
 
     public GameStateDTO generateGame(String sessionId) {
-        return game.resetBoard();
+//        return game.resetBoard();
+        return new GameStateDTO();
     }
 
     public HitResultDTO hit(String player_id, HitDTO hitDTO) {
-        return game.hit(player_id, hitDTO);
+//        return game.hit(player_id, hitDTO);
+        return new HitResultDTO();
     }
 
     public GameStateDTO getGameState(String sessionId) {
