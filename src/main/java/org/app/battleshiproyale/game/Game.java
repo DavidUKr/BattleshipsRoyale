@@ -1,58 +1,23 @@
 package org.app.battleshiproyale.game;
 
-import org.app.battleshiproyale.game.game_elements.BattleGrid;
-import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
-import org.app.battleshiproyale.game.game_elements.Player;
+import org.app.battleshiproyale.model.*;
 
-public class Game {
+public interface Game {
+    boolean joinPlayer(String playerId);
 
-    public static Player player1;
-    public static Player player2;
+    void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO);
 
-    public static void startGame(Thread playerThread1, Thread playerThread2) {
-        playerThread1.start();
-        playerThread2.start();
+    void setPlayerReady(String playerId);
 
-        try {
-            playerThread1.join();
-            playerThread2.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-        }
-    }
+    boolean getAllPlayersJoinedCount(); //0,1,2
 
-    public static void main(String[] args) {
-        System.out.println("Running Game");
+    boolean getAllPlayersReadyCount(); //0,1,2
 
-        BattleGrid battleGrid = new BattleGrid();
+    GameStateDTO resetBoard();
 
-        player1 = new Player(0, battleGrid);
-        player2 = new Player(1, battleGrid);
+    HitResultDTO hit(String playerId, HitDTO hitDTO);
 
-        Thread playerThread1 = new Thread(player1);
-        Thread playerThread2 = new Thread(player2);
+    boolean usePerk(String playerId, PerkDTO perkDTO);
 
-        Thread renderer = new Thread(new BattlegridRenderer(battleGrid));
-
-        printMap(battleGrid);
-
-        startGame(playerThread1, playerThread2);
-
-        printMap(battleGrid);
-
-        System.out.println("Winning team: " + (battleGrid.getWinningTeamId() + 1));
-    }
-
-    private static void printMap(BattleGrid battleGrid) {
-        System.out.println("\nPlayer 1's Grid:");
-        battleGrid.printPlayerGrid(battleGrid.getPlayer1Grid(),0);
-
-        System.out.println("\nPlayer 2's Grid:");
-        battleGrid.printPlayerGrid(battleGrid.getPlayer2Grid(),1);
-
-        System.out.println("\nMain Grid:");
-        battleGrid.printMainGrid();
-    }
+    int getPlayerStamina (String player_id);
 }
-

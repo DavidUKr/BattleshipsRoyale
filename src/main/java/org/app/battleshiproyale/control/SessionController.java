@@ -25,8 +25,8 @@ public class SessionController {
     }
 
     @GetMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> getPlayersJoinedStatus() {
-        return ResponseEntity.ok(sessionService.getPlayersJoinedStatus());
+    public ResponseEntity<Boolean> getPlayersJoinedStatus() {
+        return ResponseEntity.ok(sessionService.getAllPlayersJoinedStatus());
     }
 
     @PostMapping(value = "/placeShips/{player_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -37,6 +37,6 @@ public class SessionController {
 
     @GetMapping(value = "/ready")
     public ResponseEntity<Boolean> getPlayersReadyStatus() {
-        return ResponseEntity.ok(sessionService.getPlayersReadyStatus());
+        return ResponseEntity.ok(sessionService.getAllPlayersReadyStatus());
     }
 }
