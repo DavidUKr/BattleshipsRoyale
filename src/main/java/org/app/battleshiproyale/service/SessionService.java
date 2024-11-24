@@ -43,19 +43,18 @@ public class SessionService {
     }
 
     public String[] getJoinedPlayerIds() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    
         ConcurrentLinkedQueue<String> tempplayerIds = new ConcurrentLinkedQueue<>(playerIds);
-
-        System.out.println("Debug: BEFORE DELETE playerId = " + playerIds);
-        System.out.println("Debug: BEFORE DELETE playersJoined = " + playersJoined);
-
+    
         playerIds.removeAll(playerIds);
         playerIds.clear();
         playersJoined.set(0);
-
-        System.out.println("Debug: AFTER DELETE playerId = " + playerIds);
-        System.out.println("Debug: AFTER DELETE playersJoined = " + playersJoined);
-
-        System.out.println("Debug: RETURNED tempplayerIds = " + tempplayerIds);
+    
         return tempplayerIds.toArray(new String[0]);
     }
 }
