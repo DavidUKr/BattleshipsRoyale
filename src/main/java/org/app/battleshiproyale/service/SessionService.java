@@ -1,30 +1,44 @@
 package org.app.battleshiproyale.service;
 
-import lombok.RequiredArgsConstructor;
-import org.app.battleshiproyale.game.Game;
 import org.app.battleshiproyale.model.PlayerMapDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Service
-@RequiredArgsConstructor
 public class SessionService {
 
-    private final Game game;
+    private final AtomicInteger playersJoined = new AtomicInteger(0);
+    private final ConcurrentLinkedQueue<String> playerIds = new ConcurrentLinkedQueue<>();
+
 
     public boolean joinPlayerToBattle(String playerId) {
-        return game.joinPlayer(playerId);
+        if (playersJoined.get() < 2  && !playerIds.contains(playerId)) {
+            playerIds.add(playerId);
+            playersJoined.incrementAndGet();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isGameReady() {
+        return playersJoined.get() == 2;
     }
 
     public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
-        game.placePlayerShips(playerId, playerMapDTO);
-        game.setPlayerReady(playerId);
+
     }
 
-    public Boolean getAllPlayersJoinedStatus() {
-        return game.getAllPlayersJoinedCount();
+    public int getPlayersJoinedStatus() {
+        return playersJoined.get();
     }
 
-    public Boolean getAllPlayersReadyStatus() {
-        return game.getAllPlayersReadyCount();
+    public boolean getPlayersReadyStatus() {
+        return false;
+    }
+
+    public String[] getJoinedPlayerIds() {
+        return playerIds.toArray(new String[0]);
     }
 }
