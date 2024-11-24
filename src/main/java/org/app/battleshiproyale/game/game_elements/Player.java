@@ -39,9 +39,9 @@ public class Player implements Runnable {
                 battleGrid.gridLock.lock(); // Lock the grid before hitting
                 boolean hitResult = battleGrid.hit(x, y, playerId, playerGrid, gridWidth, gridHeight);
                 if (hitResult) {
-                    System.out.println("Player " + playerId + " successfully hit at (" + x + ", " + y + ")");
+                    System.out.println("Player " + (playerId + 1) + " successfully hit at (" + x + ", " + y + ")");
                 } else {
-                    System.out.println("Player " + playerId + " missed at (" + x + ", " + y + ")");
+                    System.out.println("Player " + (playerId + 1) + " missed at (" + x + ", " + y + ")");
                 }
             } finally {
                 battleGrid.gridLock.unlock();
