@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class SessionService {
 
-    private final AtomicInteger playersJoined = new AtomicInteger(0);
-    private final ConcurrentLinkedQueue<String> playerIds = new ConcurrentLinkedQueue<>();
+    public AtomicInteger playersJoined = new AtomicInteger(0);
+    public ConcurrentLinkedQueue<String> playerIds = new ConcurrentLinkedQueue<>();
 
 
     public boolean joinPlayerToBattle(String playerId) {
@@ -19,6 +19,8 @@ public class SessionService {
             playersJoined.incrementAndGet();
             return true;
         }
+        playersJoined.set(0);
+        playerIds.clear();
         return false;
     }
 
