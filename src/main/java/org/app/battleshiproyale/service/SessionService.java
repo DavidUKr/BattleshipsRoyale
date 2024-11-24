@@ -14,9 +14,6 @@ public class SessionService {
 
 
     public boolean joinPlayerToBattle(String playerId) {
-        System.out.println("Debug: playerId = " + playerId);
-        System.out.println("Debug: playersJoined = " + playersJoined.get());
-        System.out.println("Debug: playerIds = " + playerIds);
         if (playersJoined.get() < 2  && !playerIds.contains(playerId)) {
             playerIds.add(playerId);
             playersJoined.incrementAndGet();
@@ -43,18 +40,13 @@ public class SessionService {
     }
 
     public String[] getJoinedPlayerIds() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    
-        ConcurrentLinkedQueue<String> tempplayerIds = new ConcurrentLinkedQueue<>(playerIds);
-    
+        return playerIds.toArray(new String[0]);
+    }
+
+    public void resetSession() {
+       
         playerIds.removeAll(playerIds);
         playerIds.clear();
         playersJoined.set(0);
-    
-        return tempplayerIds.toArray(new String[0]);
     }
 }
