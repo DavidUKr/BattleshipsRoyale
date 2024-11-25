@@ -1,5 +1,7 @@
 package org.app.battleshiproyale.service;
 
+import lombok.RequiredArgsConstructor;
+import org.app.battleshiproyale.game.Game;
 import org.app.battleshiproyale.model.PlayerMapDTO;
 import org.springframework.stereotype.Service;
 
@@ -7,11 +9,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
+@RequiredArgsConstructor
 public class SessionService {
 
     public AtomicInteger playersJoined = new AtomicInteger(0);
     public ConcurrentLinkedQueue<String> playerIds = new ConcurrentLinkedQueue<>();
 
+    private final Game game;
 
     public boolean joinPlayerToBattle(String playerId) {
         if (playersJoined.get() < 2  && !playerIds.contains(playerId)) {
