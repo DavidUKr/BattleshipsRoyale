@@ -5,6 +5,7 @@ import org.app.battleshiproyale.game.Game;
 import org.app.battleshiproyale.model.PlayerMapDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,39 +19,33 @@ public class SessionService {
     private final Game game;
 
     public boolean joinPlayerToBattle(String playerId) {
-        if (playersJoined.get() < 2  && !playerIds.contains(playerId)) {
-            playerIds.add(playerId);
-            playersJoined.incrementAndGet();
+        List<String> joinedPlayers = game.getJoinedPlayersIds();
+        if (joinedPlayers.size() < 2  && !joinedPlayers.contains(playerId)) {
+            game.joinPlayer(playerId);
             return true;
         }
 
         return false;
     }
 
+    //TODO change to List<String>
+    public String[] getJoinedPlayerIds() {
+        return game.getJoinedPlayersIds().toArray(new String[0]);
+    }
+
     public boolean isGameReady() {
-        return playersJoined.get() == 2;
+        return game.getJoinedPlayersIds().size() == 2;
     }
 
     public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
-
-    }
-
-    public int getPlayersJoinedStatus() {
-        return playersJoined.get();
+        //TODO DTO->PlayerMap
     }
 
     public boolean getPlayersReadyStatus() {
         return false;
     }
 
-    public String[] getJoinedPlayerIds() {
-        return playerIds.toArray(new String[0]);
-    }
-
     public void resetSession() {
-       
-        playerIds.removeAll(playerIds);
-        playerIds.clear();
-        playersJoined.set(0);
+        game.resetSession();
     }
 }

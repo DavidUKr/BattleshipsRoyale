@@ -6,6 +6,9 @@ import org.app.battleshiproyale.game.game_elements.Player;
 import org.app.battleshiproyale.model.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class GameImpl implements Game{
 
@@ -64,6 +67,11 @@ public class GameImpl implements Game{
     }
 
     @Override
+    public List<String> getJoinedPlayersIds() {
+        return new ArrayList<String>();
+    }
+
+    @Override
     public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
 
     }
@@ -74,18 +82,13 @@ public class GameImpl implements Game{
     }
 
     @Override
-    public boolean getAllPlayersJoinedCount() {
-        return false;
+    public List<String> getReadyPlayersIds() {
+        return new ArrayList<String>();
     }
 
     @Override
-    public boolean getAllPlayersReadyCount() {
-        return false;
-    }
-
-    @Override
-    public GameState resetBoard() {
-        return null;
+    public void resetSession(){
+        //TODO remove players
     }
 
     @Override
@@ -101,6 +104,11 @@ public class GameImpl implements Game{
     @Override
     public int getPlayerStamina(String player_id) {
         return 0;
+    }
+
+    @Override
+    public GameState resetBoard() {
+        return null;
     }
 }
 

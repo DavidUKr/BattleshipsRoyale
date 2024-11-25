@@ -30,12 +30,6 @@ public class SessionController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/join/delete")
-    public ResponseEntity<Boolean> resetSession() {
-        sessionService.resetSession();
-        return ResponseEntity.ok(true);
-    }
-
     @GetMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getPlayersJoinedStatus() {
         Map<String, Object> response = new HashMap<>();
@@ -44,6 +38,12 @@ public class SessionController {
         }
         
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value = "/join")
+    public ResponseEntity<Boolean> resetSession() {
+        sessionService.resetSession();
+        return ResponseEntity.ok(true);
     }
 
     @PostMapping(value = "/placeShips/{player_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
