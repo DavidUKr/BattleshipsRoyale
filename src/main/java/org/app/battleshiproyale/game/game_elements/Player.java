@@ -20,18 +20,16 @@ public class Player implements Runnable {
 
     @Override
     public void run() {
-        // Determine which grid this player interacts with
+
         GridCell[][] playerGrid = (playerId == 0) ? battleGrid.getPlayer1Grid() : battleGrid.getPlayer2Grid();
         int gridWidth = playerGrid.length;
         int gridHeight = playerGrid[0].length;
 
-        // Continue playing until all cells are visited or the game is finished
         while (visitedCells.size() < gridWidth * gridHeight && !battleGrid.isFinished()) {
-            int x = random.nextInt(gridWidth);  // Generate random row index
-            int y = random.nextInt(gridHeight);  // Generate random column index
-            String cellKey = x + "," + y;      // Unique identifier for the cell
+            int x = random.nextInt(gridWidth);
+            int y = random.nextInt(gridHeight);
+            String cellKey = x + "," + y;
 
-            // Skip this cell if it has already been visited
             if (visitedCells.contains(cellKey)) {
                 continue;
             } else {
@@ -39,7 +37,7 @@ public class Player implements Runnable {
             }
 
             try {
-                battleGrid.gridLock.lock(); // Lock the grid before hitting
+                battleGrid.gridLock.lock();
                 boolean hitResult = battleGrid.hit(x, y, playerId, playerGrid, gridWidth, gridHeight);
                 if (hitResult) {
                     System.out.println("Player " + (playerId + 1) + " successfully hit at (" + x + ", " + y + ")");
