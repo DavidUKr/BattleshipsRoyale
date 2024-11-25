@@ -36,8 +36,8 @@ abstract public class BaseShip {
         for (int[] coord : coordinates) {
             int x = coord[0];
             int y = coord[1];
-            // Check if the cell is not hit
-            if (grid[x][y].cellType != 1 && grid[x][y].cellType != 2) {
+
+            if (grid[x][y].cellType != GridCell.CellType.DISCOVERED_SHIP_TEAM_1 && grid[x][y].cellType != GridCell.CellType.DISCOVERED_SHIP_TEAM_2) {
                 return false; // Ship is not completely destroyed
             }
         }

@@ -2,6 +2,7 @@ package org.app.battleshiproyale.service;
 
 import lombok.RequiredArgsConstructor;
 import org.app.battleshiproyale.game.Game;
+import org.app.battleshiproyale.game.game_elements.GridCell;
 import org.app.battleshiproyale.model.GameStateDTO;
 import org.app.battleshiproyale.model.HitDTO;
 import org.app.battleshiproyale.model.HitResultDTO;
@@ -23,7 +24,7 @@ public class GameService {
     }
 
     public GameStateDTO getGameState(String sessionId) {
-        return new GameStateDTO();
+        return game.resetBoard();
     }
 
     public boolean usePerk(String playerId, PerkDTO perkDTO) {

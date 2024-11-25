@@ -1,10 +1,13 @@
 package org.app.battleshiproyale.game.game_elements;
 
+import lombok.Getter;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 public class Player implements Runnable {
+    @Getter
     private final int playerId;
     private final Random random = new Random(); // For generating random moves
     private final BattleGrid battleGrid;

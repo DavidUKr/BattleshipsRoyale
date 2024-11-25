@@ -2,6 +2,7 @@ package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
 import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
+import org.app.battleshiproyale.game.game_elements.GridCell;
 import org.app.battleshiproyale.game.game_elements.Player;
 import org.app.battleshiproyale.model.*;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ public class GameImpl implements Game{
 
     public static Player player1;
     public static Player player2;
+    public static BattleGrid battleGrid;
 
     public static void startGame(Thread playerThread1, Thread playerThread2) {
         playerThread1.start();
@@ -28,7 +30,7 @@ public class GameImpl implements Game{
     public static void main(String[] args) {
         System.out.println("Running Game");
 
-        BattleGrid battleGrid = new BattleGrid();
+        battleGrid = new BattleGrid();
 
         player1 = new Player(0, battleGrid);
         player2 = new Player(1, battleGrid);
@@ -85,12 +87,27 @@ public class GameImpl implements Game{
 
     @Override
     public GameStateDTO resetBoard() {
-        return null;
+        GridCell[][] mainGrid = battleGrid.getMainGrid();
+        boolean isEnd = battleGrid.isFinished();
+        return new GameStateDTO(mainGrid, isEnd);
     }
 
     @Override
     public HitResultDTO hit(String playerId, HitDTO hitDTO) {
-        return null;
+        int x = hitDTO.getX();
+        int y = hitDTO.getY();
+        int width = battleGrid.getMAIN_GRID_SIZE();
+        int length = battleGrid.getMAIN_GRID_SIZE();
+        GridCell[][] grid = battleGrid.getMainGrid();
+
+        boolean hitSuccess = battleGrid.hit(x, y, Integer.parseInt(playerId), grid, width, length);
+
+        if (hitSuccess) {
+            GridCell cell = battleGrid.getMainGrid()[x][y];
+            return new HitResultDTO(cell.cellType);
+
+        }
+        return new HitResultDTO(GridCell.CellType.INVALID);
     }
 
     @Override

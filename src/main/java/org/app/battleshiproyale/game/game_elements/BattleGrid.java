@@ -36,18 +36,6 @@ public class BattleGrid {
     private final GridCell[][] player2Grid;
 
 
-    //public final GridCell[][] grid;
-    /* grid code
-    *  0 - discovered empty
-    *  1 - discovered ship team 1
-    *  2 - discovered ship team 2
-    *  3 - undiscovered empty
-    *  4 - undiscovered ship team 1
-    *  5 - undiscovered ship team 2
-    *  6 - undiscovered perk 1
-    *  7 - undiscovered perk 2
-    */
-
     private ArrayList<BaseShip> ships=new ArrayList<>();
     public int team1ShipCells = 0;
     public int team2ShipCells = 0;
@@ -84,48 +72,46 @@ public class BattleGrid {
         // Initialize the main grid with default values
         for (int i = 0; i < MAIN_GRID_SIZE; i++) {
             for (int j = 0; j < MAIN_GRID_SIZE; j++) {
-                mainGrid[i][j] = new GridCell(3); // 3 for undiscovered empty
+                mainGrid[i][j] = new GridCell(GridCell.CellType.DISCOVERED_EMPTY); // 3 for undiscovered empty
             }
         }
 
         // Initialize the player grids with default values
         for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
             for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
-                player1Grid[i][j] = new GridCell(3); // 3 for undiscovered empty
-                player2Grid[i][j] = new GridCell(3); // 3 for undiscovered empty
+                player1Grid[i][j] = new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY); // 3 for undiscovered empty
+                player2Grid[i][j] = new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY); // 3 for undiscovered empty
             }
         }
 
         // Hard-code Player 1's grid
         // Place a ship horizontally starting at (0,0) of length 4
         for (int i = 0; i < 4; i++) {
-            player1Grid[0][i] = new GridCell(4); // 4 for undiscovered ship (team 1)
+            player1Grid[0][i] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1); // 4 for undiscovered ship (team 1)
             team1ShipCells++;
 
         }
 
         // Place another ship vertically starting at (5,5) of length 3
         for (int i = 0; i < 3; i++) {
-            player1Grid[5 + i][5] = new GridCell(4); // 4 for undiscovered ship (team 1)
+            player1Grid[5 + i][5] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1); // 4 for undiscovered ship (team 1)
             team1ShipCells++;
         }
 
         // Hard-code Player 2's grid
         // Place a ship horizontally starting at (2,3) of length 5
         for (int i = 0; i < 5; i++) {
-            player2Grid[2][3 + i] = new GridCell(5); // 5 for undiscovered ship (team 2)
+            player2Grid[2][3 + i] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2); // 5 for undiscovered ship (team 2)
             team2ShipCells++;
         }
 
         // Place another ship vertically starting at (7,1) of length 2
         for (int i = 0; i < 2; i++) {
-            player2Grid[7 + i][1] = new GridCell(5); // 5 for undiscovered ship (team 2)
+            player2Grid[7 + i][1] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2); // 5 for undiscovered ship (team 2)
             team2ShipCells++;
         }
 
-        // Hard-code the main grid (optional, if you want to see player grids on the main grid)
-        // Copy Player 1's grid onto the main grid at a fixed location
-        int startX1 = 10; // Top-left corner for Player 1's grid on the main grid
+        int startX1 = 10;
         int startY1 = 10;
         for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
             for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
@@ -133,7 +119,6 @@ public class BattleGrid {
             }
         }
 
-        // Copy Player 2's grid onto the main grid at a fixed location
         int startX2 = 50; // Top-left corner for Player 2's grid on the main grid
         int startY2 = 50;
         for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
@@ -180,14 +165,14 @@ public class BattleGrid {
             int checkX = (orientation == 0) ? x + i : x; // Horizontal or vertical
             int checkY = (orientation == 1) ? y + i : y;
 
-            if (grid[checkX][checkY].cellType != 3) {
+            if (grid[checkX][checkY].cellType.getCode() != 3) {
                 System.out.println("Collision detected at: (" + checkX + ", " + checkY + ")");
                 return false;
             }
         }
 
         // Place the ship
-        int cellType = (ship.getTeam_id() == 0) ? 4 : 5; // Team 1 or Team 2
+        GridCell.CellType shipType = (ship.getTeam_id() == 0) ? GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1 : GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2;
         if (ship.getTeam_id() == 0) {
             team1ShipCells++; // Increment Team 1's total ship cells
         } else {
@@ -197,7 +182,7 @@ public class BattleGrid {
             int placeX = (orientation == 0) ? x + i : x;
             int placeY = (orientation == 1) ? y + i : y;
 
-            grid[placeX][placeY].cellType = cellType;
+            grid[placeX][placeY].cellType = shipType;
         }
 
         ships.add(ship);
@@ -223,13 +208,13 @@ public class BattleGrid {
     }
 
 
-    public void generatePerks(int numPerks, int perkType) {
+    public void generatePerks(int numPerks, GridCell.CellType perkType) {
         int perksPlaced = 0;
         while (perksPlaced < numPerks) {
             int x = (int) (Math.random() * MAIN_GRID_SIZE);
             int y = (int) (Math.random() * MAIN_GRID_SIZE);
 
-            if (mainGrid[x][y].cellType == 3) {
+            if (mainGrid[x][y].cellType == GridCell.CellType.UNDISCOVERED_EMPTY) {
                 mainGrid[x][y] = new GridCell(perkType);
                 perksPlaced++;
             }
@@ -245,22 +230,22 @@ public class BattleGrid {
 
         // Identify cell type and process hit
         switch (grid[x][y].cellType) {
-            case 0: // Already empty
+            case DISCOVERED_EMPTY: // Already empty
                 System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
                 return false;
 
-            case 1:
-            case 2: // Already hit a ship
+            case DISCOVERED_SHIP_TEAM_1:
+            case DISCOVERED_SHIP_TEAM_2: // Already hit a ship
                 System.out.println("Already hit a ship at (" + x + ", " + y + ")");
                 return false;
 
-            case 3: // Undiscovered empty
-                grid[x][y].cellType = 0; // Mark as discovered empty
+            case UNDISCOVERED_EMPTY: // Undiscovered empty
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY; // Mark as discovered empty
                 System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
                 return true;
 
-            case 4: // Undiscovered ship (Team 1)
-                grid[x][y].cellType = 1; // Mark as discovered ship
+            case UNDISCOVERED_SHIP_TEAM_1: // Undiscovered ship (Team 1)
+                grid[x][y].cellType = GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1; // Mark as discovered ship
                 team2Hits++; // Increment hits by Team 2 on Team 1
                 System.out.println("team2Hits: " + team2Hits + ", team1ShipCells: " + team1ShipCells);
                 System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
@@ -271,8 +256,8 @@ public class BattleGrid {
                 }
                 return true;
 
-            case 5: // Undiscovered ship (Team 2)
-                grid[x][y].cellType = 2; // Mark as discovered ship
+            case UNDISCOVERED_SHIP_TEAM_2: // Undiscovered ship (Team 2)
+                grid[x][y].cellType = GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2; // Mark as discovered ship
                 team1Hits++; // Increment hits by Team 1 on Team 2
                 System.out.println("team1Hits: " + team1Hits + ", team2ShipCells: " + team2ShipCells);
                 System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");
@@ -283,13 +268,13 @@ public class BattleGrid {
                 }
                 return true;
 
-            case 6: // Perk type 1
-                grid[x][y].cellType = 0; // Mark as discovered empty
+            case UNDISCOVERED_PERK_1: // Perk type 1
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY; // Mark as discovered empty
                 System.out.println("Discovered a perk (Type 1) at (" + x + ", " + y + ")");
                 return true;
 
-            case 7: // Perk type 2
-                grid[x][y].cellType = 0; // Mark as discovered empty
+            case UNDISCOVERED_PERK_2: // Perk type 2
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY; // Mark as discovered empty
                 System.out.println("Discovered a perk (Type 2) at (" + x + ", " + y + ")");
                 return true;
 
@@ -310,23 +295,23 @@ public class BattleGrid {
         for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
             output.append("| ");
             for (int j = 0; j < PLAYER_GRID_SIZE; j++) {
-                int cellType = playerGrid[i][j].cellType;
+                GridCell.CellType cellType = playerGrid[i][j].cellType;
 
                 switch (cellType) {
-                    case 0: // Discovered empty
+                    case DISCOVERED_EMPTY: // Discovered empty
                         output.append(" ");
                         break;
-                    case 1: // Discovered ship (Team 1)
-                    case 2: // Discovered ship (Team 2)
+                    case DISCOVERED_SHIP_TEAM_1: // Discovered ship (Team 1)
+                    case DISCOVERED_SHIP_TEAM_2: // Discovered ship (Team 2)
                         output.append("X");
                         break;
-                    case 3: // Undiscovered empty
+                    case UNDISCOVERED_EMPTY: // Undiscovered empty
                         output.append(".");
                         break;
-                    case 4: // Undiscovered ship (Team 1)
+                    case UNDISCOVERED_SHIP_TEAM_1: // Undiscovered ship (Team 1)
                         output.append(team_id == 0 ? "$" : "-"); // Team 1 sees their own ships
                         break;
-                    case 5: // Undiscovered ship (Team 2)
+                    case UNDISCOVERED_SHIP_TEAM_2: // Undiscovered ship (Team 2)
                         output.append(team_id == 1 ? "$" : "-"); // Team 2 sees their own ships
                         break;
                     default:
@@ -347,25 +332,25 @@ public class BattleGrid {
 
         for (int i = 0; i < MAIN_GRID_SIZE; i++) {
             for (int j = 0; j < MAIN_GRID_SIZE; j++) {
-                int cellType = mainGrid[i][j].cellType;
+                GridCell.CellType cellType = mainGrid[i][j].cellType;
 
                 switch (cellType) {
-                    case 0:
+                    case DISCOVERED_EMPTY:
                         output.append(" ");
                         break;
-                    case 1:
-                    case 2:
+                    case DISCOVERED_SHIP_TEAM_1:
+                    case DISCOVERED_SHIP_TEAM_2:
                         output.append("X");
                         break;
-                    case 3:
+                    case UNDISCOVERED_EMPTY:
                         output.append(".");
                         break;
-                    case 4:
-                    case 5:
+                    case UNDISCOVERED_SHIP_TEAM_1:
+                    case UNDISCOVERED_SHIP_TEAM_2:
                         output.append("$");
                         break;
-                    case 6:
-                    case 7:
+                    case UNDISCOVERED_PERK_1:
+                    case UNDISCOVERED_PERK_2:
                         output.append("P");
                         break;
                     default:
