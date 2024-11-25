@@ -72,7 +72,7 @@ public class BattleGrid {
         // Initialize the main grid with default values
         for (int i = 0; i < MAIN_GRID_SIZE; i++) {
             for (int j = 0; j < MAIN_GRID_SIZE; j++) {
-                mainGrid[i][j] = new GridCell(GridCell.CellType.DISCOVERED_EMPTY);
+                mainGrid[i][j] = new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY);
             }
         }
 
@@ -245,7 +245,7 @@ public class BattleGrid {
                 return true;
 
             case UNDISCOVERED_SHIP_TEAM_1:
-                grid[x][y].cellType = GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1;
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_1;
                 team2Hits++;
                 System.out.println("team2Hits: " + team2Hits + ", team1ShipCells: " + team1ShipCells);
                 System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
@@ -257,7 +257,7 @@ public class BattleGrid {
                 return true;
 
             case UNDISCOVERED_SHIP_TEAM_2:
-                grid[x][y].cellType = GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2;
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_2;
                 team1Hits++;
                 System.out.println("team1Hits: " + team1Hits + ", team2ShipCells: " + team2ShipCells);
                 System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");

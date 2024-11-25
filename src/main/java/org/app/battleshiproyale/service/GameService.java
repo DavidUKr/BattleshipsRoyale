@@ -26,7 +26,8 @@ public class GameService {
     }
 
     public GameStateDTO getGameState(String sessionId) {
-        return game.resetBoard();
+//        return game.resetBoard();
+        return new GameStateDTO();
     }
 
     public boolean usePerk(String playerId, PerkDTO perkDTO) {
