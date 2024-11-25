@@ -2,7 +2,7 @@ package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
 import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
-import org.app.battleshiproyale.game.game_elements.Player;
+import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.*;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +12,8 @@ import java.util.List;
 @Component
 public class GameImpl implements Game{
 
-    public static Player player1;
-    public static Player player2;
+    ArrayList<Player> players;
+    private final int MAX_PLAYERS =2;
 
     public static void startGame(Thread playerThread1, Thread playerThread2) {
         playerThread1.start();
@@ -33,17 +33,11 @@ public class GameImpl implements Game{
 
         BattleGrid battleGrid = new BattleGrid();
 
-        player1 = new Player(0, battleGrid);
-        player2 = new Player(1, battleGrid);
-
-        Thread playerThread1 = new Thread(player1);
-        Thread playerThread2 = new Thread(player2);
-
         Thread renderer = new Thread(new BattlegridRenderer(battleGrid));
 
         printMap(battleGrid);
 
-        startGame(playerThread1, playerThread2);
+//        startGame(playerThread1, playerThread2);
 
         printMap(battleGrid);
 
@@ -63,12 +57,16 @@ public class GameImpl implements Game{
 
     @Override
     public boolean joinPlayer(String playerId) {
+        if (players.size() <= MAX_PLAYERS){
+            players.add(new Player(playerId));
+            return true;
+        }
         return false;
     }
 
     @Override
     public List<String> getJoinedPlayersIds() {
-        return new ArrayList<String>();
+        return players.stream().map(Player::getId).toList();
     }
 
     @Override
