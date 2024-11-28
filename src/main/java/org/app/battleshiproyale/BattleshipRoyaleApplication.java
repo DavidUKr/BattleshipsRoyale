@@ -19,7 +19,9 @@ public class BattleshipRoyaleApplication {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); 
-        config.addAllowedOrigin("http://localhost:3000"); 
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://battleship-royale.web.app");
+        config.addAllowedOrigin("https://battleship-royale.web.app/"); 
         config.addAllowedHeader("*"); 
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config); 
