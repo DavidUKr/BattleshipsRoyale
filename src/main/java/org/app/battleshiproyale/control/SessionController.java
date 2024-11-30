@@ -54,7 +54,7 @@ public class SessionController {
     }
 
     @GetMapping(value = "/ready")
-    public ResponseEntity<List<String>> getPlayersReadyStatus() {
+    public ResponseEntity<String[]> getPlayersReadyStatus() {
         return ResponseEntity.ok(sessionService.getPlayersReadyStatus());
     }
 }

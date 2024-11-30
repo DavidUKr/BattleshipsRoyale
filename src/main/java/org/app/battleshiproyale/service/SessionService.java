@@ -15,8 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class SessionService {
 
-    public AtomicInteger playersJoined = new AtomicInteger(0);
-    public ConcurrentLinkedQueue<String> playerIds = new ConcurrentLinkedQueue<>();
+    public ConcurrentLinkedQueue<String> playerReadyIds = new ConcurrentLinkedQueue<>();
 
     private final Game game;
     private final MapUtils mapUtils;
@@ -43,10 +42,14 @@ public class SessionService {
         PlayerMap playerMap=mapUtils.getPlayerMapFromDTO(playerMapDTO, playerId);
         game.placePlayerShips(playerId, playerMap);
         game.setPlayerReady(playerId);
+        //TODO remove provisional logic
+        playerReadyIds.add(playerId);
     }
 
-    public List<String> getPlayersReadyStatus() {
-        return game.getReadyPlayersIds();
+    public String[] getPlayersReadyStatus() {
+//        return game.getReadyPlayersIds();
+        //TODO remove provisional logic
+        return playerReadyIds.toArray(new String[0]);
     }
 
     public void resetSession() {
