@@ -9,7 +9,7 @@ public interface Game {
 
     List<String> getJoinedPlayersIds();
 
-    void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO);
+    void placePlayerShips(String playerId, PlayerMap playerMap);
 
     void setPlayerReady(String playerId);
 

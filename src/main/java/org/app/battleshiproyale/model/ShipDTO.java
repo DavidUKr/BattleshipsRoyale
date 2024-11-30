@@ -7,7 +7,6 @@ public class ShipDTO {
 
     String name;
     ShipType shipType;
-    int first_cell_x;
-    int first_cell_y;
+    Point firstCell_coordinates;
     ShipOrientation orientation;
 }

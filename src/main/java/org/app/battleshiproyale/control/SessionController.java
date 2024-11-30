@@ -3,6 +3,7 @@ package org.app.battleshiproyale.control;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.app.battleshiproyale.model.PlayerMapDTO;
@@ -53,7 +54,7 @@ public class SessionController {
     }
 
     @GetMapping(value = "/ready")
-    public ResponseEntity<Boolean> getPlayersReadyStatus() {
+    public ResponseEntity<List<String>> getPlayersReadyStatus() {
         return ResponseEntity.ok(sessionService.getPlayersReadyStatus());
     }
 }

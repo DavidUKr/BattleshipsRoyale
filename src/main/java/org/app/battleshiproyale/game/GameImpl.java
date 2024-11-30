@@ -55,7 +55,7 @@ public class GameImpl implements Game{
     }
 
     @Override
-    public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
+    public void placePlayerShips(String playerId, PlayerMap playerMap) {
 
     }
 
