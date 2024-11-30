@@ -25,4 +25,5 @@ public interface Game {
 
     GameState resetBoard();//look into model.GameState
 
+    void startGame();
 }

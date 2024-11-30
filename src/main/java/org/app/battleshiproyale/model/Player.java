@@ -8,8 +8,9 @@ import java.util.List;
 @Data
 public class Player {
     private final String id; // Track visited cells
-    List<BaseShip> ships;
-
+    public int stamina;
+    private List<BaseShip> ships;
+    private boolean isReadyForBattle=false;
     public Player(String id) {
         this.id = id;
     }

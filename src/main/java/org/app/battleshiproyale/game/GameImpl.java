@@ -1,9 +1,9 @@
 package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
-import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
 import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,17 +15,8 @@ public class GameImpl implements Game{
     ArrayList<Player> players;
     private final int MAX_PLAYERS =2;
 
-    public static void startGame(Thread playerThread1, Thread playerThread2) {
-        playerThread1.start();
-        playerThread2.start();
-
-        try {
-            playerThread1.join();
-            playerThread2.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-        }
+    public void startGame() {
+        //TODO STAMINA JobRnr. ...
     }
 
     public static void main(String[] args) {
@@ -33,13 +24,7 @@ public class GameImpl implements Game{
 
         BattleGrid battleGrid = new BattleGrid();
 
-        Thread renderer = new Thread(new BattlegridRenderer(battleGrid));
-
-        printMap(battleGrid);
-
-//        startGame(playerThread1, playerThread2);
-
-        printMap(battleGrid);
+//        printMap(battleGrid);
 
         System.out.println("Winning team: " + (battleGrid.getWinningTeamId() + 1));
     }
