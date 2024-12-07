@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class GameImpl implements Game{
 
-    ArrayList<Player> players;
+    private ArrayList<Player> players= new ArrayList<>();;
     private final int MAX_PLAYERS =2;
 
     public void startGame() {
@@ -51,9 +51,7 @@ public class GameImpl implements Game{
 
     @Override
     public List<String> getJoinedPlayersIds() {
-        if (!players.isEmpty())
-            return players.stream().map(Player::getId).toList();
-        else return new ArrayList<>();
+        return players.stream().map(Player::getId).toList();
     }
 
     @Override
