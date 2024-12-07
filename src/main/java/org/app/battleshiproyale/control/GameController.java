@@ -17,26 +17,26 @@ public class GameController {
 
     private final GameService gameService;
 
-    @PostMapping(value = "/hit/{player_id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HitResultDTO> hit(@PathVariable String player_id, @RequestBody HitDTO hitDTO) {
+    @PostMapping(value = "/hit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HitResultDTO> hit(@RequestParam String player_id, @RequestBody HitDTO hitDTO) {
         HitResultDTO hitResult = gameService.hit(player_id, hitDTO);
         return ResponseEntity.ok(hitResult);
     }
 
-    @PostMapping(value = "/use_perk/{player_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> usePerk(@PathVariable String player_id, @RequestBody PerkDTO perkDTO) {
+    @PostMapping(value = "/use_perk", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> usePerk(@RequestParam String player_id, @RequestBody PerkDTO perkDTO) {
         boolean approved = gameService.usePerk(player_id, perkDTO);
         return ResponseEntity.ok(approved);
     }
 
-    @GetMapping(value = "/stamina/{player_id}")
-    public ResponseEntity<Integer> getPLayerStamina(@PathVariable String player_id) {
+    @GetMapping(value = "/stamina")
+    public ResponseEntity<Integer> getPLayerStamina(@RequestParam String player_id) {
         int stamina=gameService.getPlayerStamina(player_id);
         return ResponseEntity.ok(stamina);
     }
 
-    @GetMapping(value = "/state/{player_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GameStateDTO> getGameState(@PathVariable String player_id) {
+    @GetMapping(value = "/state", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GameStateDTO> getGameState(@RequestParam String player_id) {
         GameStateDTO gameState = gameService.getGameState(player_id);
         return ResponseEntity.ok(gameState);
     }

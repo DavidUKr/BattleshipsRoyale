@@ -19,8 +19,8 @@ public class SessionController {
 
     private final SessionService sessionService;
 
-    @PostMapping(value = "/join/{player_id}")
-    public ResponseEntity<Map<String, Object>> joinBattle(@PathVariable String player_id) {
+    @PostMapping(value = "/join")
+    public ResponseEntity<Map<String, Object>> joinBattle(@RequestParam String player_id) {
         Map<String, Object> response = new HashMap<>();
         if (sessionService.joinPlayerToBattle(player_id)) {
             response.put("status", "Player accepted");
@@ -47,8 +47,8 @@ public class SessionController {
         return ResponseEntity.ok(true);
     }
 
-    @PostMapping(value = "/placeShips/{player_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> placePlayerShips(@PathVariable String player_id, @RequestBody PlayerMapDTO playerMapDTO) {
+    @PostMapping(value = "/placeShips", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> placePlayerShips(@RequestParam String player_id, @RequestBody PlayerMapDTO playerMapDTO) {
         sessionService.placePlayerShips(player_id, playerMapDTO);
         return ResponseEntity.ok("Ships placed");
     }
