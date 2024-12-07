@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.Getter;
 import lombok.Setter;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Component
 public class BattleGrid {
 
     public Lock gridLock = new ReentrantLock();

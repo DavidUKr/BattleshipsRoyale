@@ -53,8 +53,8 @@ public class SessionController {
         return ResponseEntity.ok("Ships placed");
     }
 
-    @GetMapping(value = "/ready")
-    public ResponseEntity<String[]> getPlayersReadyStatus() {
+    @GetMapping(value = "/ready", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getPlayersReadyStatus() {
         return ResponseEntity.ok(sessionService.getPlayersReadyStatus());
     }
 }
