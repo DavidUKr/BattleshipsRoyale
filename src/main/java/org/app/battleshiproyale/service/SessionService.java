@@ -38,12 +38,13 @@ public class SessionService {
         return game.getJoinedPlayersIds().size() == 2;
     }
 
-    public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
+    public boolean placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
         PlayerMap playerMap=mapUtils.getPlayerMapFromDTO(playerMapDTO, playerId);
-        game.placePlayerShips(playerId, playerMap);
-        game.setPlayerReady(playerId);
-//        //TODO remove provisional logic
-//        playerReadyIds.add(playerId);
+        if (game.placePlayerShips(playerId, playerMap)){
+            game.setPlayerReady(playerId);
+            return true;
+        }
+        return false;
     }
 
     public List<String> getPlayersReadyStatus() {

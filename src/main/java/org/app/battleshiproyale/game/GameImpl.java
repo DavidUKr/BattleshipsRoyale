@@ -1,14 +1,11 @@
 package org.app.battleshiproyale.game;
 
-import lombok.RequiredArgsConstructor;
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
 import org.app.battleshiproyale.game.game_elements.GridCell;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
 import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,17 +62,22 @@ public class GameImpl implements Game{
     }
 
     @Override
-    public void placePlayerShips(String playerId, PlayerMap playerMap) {
-        GridCell[][] playerGrid=new GridCell[10][10];
-        for(BaseShip ship : playerMap.getShips()){
-            for ( Point point : ship.getCoordinates()){
-                if (playerId==players.get(0).getId())
-                    playerGrid[point.getX()][point.getY()]=new GridCell(4);
-                else
-                    playerGrid[point.getX()][point.getY()]=new GridCell(5);
+    public boolean placePlayerShips(String playerId, PlayerMap playerMap) {
+        if (getJoinedPlayersIds().contains(playerId)){
+            GridCell[][] playerGrid=new GridCell[10][10];
+            for(BaseShip ship : playerMap.getShips()){
+                for ( Point point : ship.getCoordinates()){
+                    if (playerId==players.get(0).getId())
+                        playerGrid[point.getX()][point.getY()]=new GridCell(4);
+                    else
+                        playerGrid[point.getX()][point.getY()]=new GridCell(5);
+                }
             }
+            this.battleGrid.placePlayerGridOnMain(playerGrid);
+            return true;
         }
-        this.battleGrid.placePlayerGridOnMain(playerGrid);
+
+        return false;
     }
 
     @Override
@@ -110,6 +112,11 @@ public class GameImpl implements Game{
     @Override
     public int getPlayerStamina(String player_id) {
         return 0;
+    }
+
+    @Override
+    public GameState getGameState() {
+        return null;
     }
 
     @Override

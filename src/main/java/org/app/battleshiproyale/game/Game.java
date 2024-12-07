@@ -9,7 +9,7 @@ public interface Game {
 
     List<String> getJoinedPlayersIds();
 
-    void placePlayerShips(String playerId, PlayerMap playerMap);
+    boolean placePlayerShips(String playerId, PlayerMap playerMap);
 
     void setPlayerReady(String playerId);
 
@@ -22,6 +22,8 @@ public interface Game {
     boolean usePerk(String playerId, PerkDTO perkDTO);
 
     int getPlayerStamina (String player_id);
+
+    GameState getGameState();
 
     GameState resetBoard();//look into model.GameState
 

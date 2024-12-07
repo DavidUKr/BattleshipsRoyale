@@ -49,8 +49,9 @@ public class SessionController {
 
     @PostMapping(value = "/placeShips", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> placePlayerShips(@RequestParam String player_id, @RequestBody PlayerMapDTO playerMapDTO) {
-        sessionService.placePlayerShips(player_id, playerMapDTO);
-        return ResponseEntity.ok("Ships placed");
+        if (sessionService.placePlayerShips(player_id, playerMapDTO))
+            return ResponseEntity.ok("Ships placed");
+        else return ResponseEntity.ok("Wrong ID");
     }
 
     @GetMapping(value = "/ready", produces = MediaType.APPLICATION_JSON_VALUE)
