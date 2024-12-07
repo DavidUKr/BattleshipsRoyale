@@ -51,7 +51,9 @@ public class GameImpl implements Game{
 
     @Override
     public List<String> getJoinedPlayersIds() {
-        return players.stream().map(Player::getId).toList();
+        if (!players.isEmpty())
+            return players.stream().map(Player::getId).toList();
+        else return new ArrayList<>();
     }
 
     @Override
