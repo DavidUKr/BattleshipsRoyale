@@ -71,7 +71,7 @@ public class GameImpl implements Game{
 
     @Override
     public void resetSession(){
-        //TODO remove players
+        players.clear();
     }
 
     @Override
