@@ -42,18 +42,20 @@ public class SessionService {
         PlayerMap playerMap=mapUtils.getPlayerMapFromDTO(playerMapDTO, playerId);
         game.placePlayerShips(playerId, playerMap);
         game.setPlayerReady(playerId);
-        //TODO remove provisional logic
-        playerReadyIds.add(playerId);
+//        //TODO remove provisional logic
+//        playerReadyIds.add(playerId);
     }
 
-    public String[] getPlayersReadyStatus() {
-//        return game.getReadyPlayersIds();
-        //TODO remove provisional logic
-        return playerReadyIds.toArray(new String[0]);
+    public List<String> getPlayersReadyStatus() {
+        return game.getReadyPlayersIds();
+//        //TODO remove provisional logic
+//        return playerReadyIds.toArray(new String[0]);
     }
 
     public void resetSession() {
         game.resetSession();
         playerReadyIds.clear();
     }
+
+
 }
