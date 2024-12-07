@@ -22,6 +22,10 @@ public class BattleGrid {
     //private final int x_size;
     //@Getter
     //private final int y_size;
+    @Getter @Setter
+    private String player1_id;
+    @Getter @Setter
+    private String player2_id;
     @Getter@Setter
     private int x_divider;
     @Getter
@@ -34,7 +38,6 @@ public class BattleGrid {
     private final GridCell[][] player1Grid;
     @Getter
     private final GridCell[][] player2Grid;
-
 
     //public final GridCell[][] grid;
     /* grid code
@@ -187,8 +190,8 @@ public class BattleGrid {
         }
 
         // Place the ship
-        int cellType = (ship.getTeam_id() == 0) ? 4 : 5; // Team 1 or Team 2
-        if (ship.getTeam_id() == 0) {
+        int cellType = (ship.getPlayer_id() == player1_id) ? 4 : 5; // Team 1 or Team 2
+        if (ship.getPlayer_id() == player1_id) {
             team1ShipCells++; // Increment Team 1's total ship cells
         } else {
             team2ShipCells++; // Increment Team 2's total ship cells
@@ -216,7 +219,7 @@ public class BattleGrid {
         }
 
         // Set the ship's coordinates and grid reference
-        ship.setCoordinates(shipCoordinates);
+//        ship.setCoordinates(shipCoordinates);
         //ship.setGrid(this.grid); // Assuming 'grid' is a field in `BattleGrid`
 
         return true;
@@ -380,13 +383,13 @@ public class BattleGrid {
 
 
     //TODO implement looking in ships array
-    public int check_finish(int team_id) {
+    public String check_finish(String player_id) {
         for (BaseShip ship : ships) {
-            if (ship.getTeam_id() == team_id && !ship.isDestroyed()) {
-                return team_id; // Team still has undestroyed ships
+            if (ship.getPlayer_id().equals(player_id) && !ship.isDestroyed()) {
+                return player_id; // Team still has undestroyed ships
             }
         }
-        return (team_id == 0) ? 1 : 0; // All ships of the team are destroyed
+        return (player_id.equals(player1_id)) ? player2_id : player1_id; // All ships of the team are destroyed
     }
 
 }

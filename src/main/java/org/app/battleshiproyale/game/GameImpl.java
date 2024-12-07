@@ -1,28 +1,22 @@
 package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
-import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
-import org.app.battleshiproyale.game.game_elements.Player;
+import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class GameImpl implements Game{
 
-    public static Player player1;
-    public static Player player2;
+    ArrayList<Player> players;
+    private final int MAX_PLAYERS =2;
 
-    public static void startGame(Thread playerThread1, Thread playerThread2) {
-        playerThread1.start();
-        playerThread2.start();
-
-        try {
-            playerThread1.join();
-            playerThread2.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-        }
+    public void startGame() {
+        //TODO STAMINA JobRnr. ...
     }
 
     public static void main(String[] args) {
@@ -30,19 +24,7 @@ public class GameImpl implements Game{
 
         BattleGrid battleGrid = new BattleGrid();
 
-        player1 = new Player(0, battleGrid);
-        player2 = new Player(1, battleGrid);
-
-        Thread playerThread1 = new Thread(player1);
-        Thread playerThread2 = new Thread(player2);
-
-        Thread renderer = new Thread(new BattlegridRenderer(battleGrid));
-
-        printMap(battleGrid);
-
-        startGame(playerThread1, playerThread2);
-
-        printMap(battleGrid);
+//        printMap(battleGrid);
 
         System.out.println("Winning team: " + (battleGrid.getWinningTeamId() + 1));
     }
@@ -60,11 +42,20 @@ public class GameImpl implements Game{
 
     @Override
     public boolean joinPlayer(String playerId) {
+        if (players.size() <= MAX_PLAYERS){
+            players.add(new Player(playerId));
+            return true;
+        }
         return false;
     }
 
     @Override
-    public void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO) {
+    public List<String> getJoinedPlayersIds() {
+        return players.stream().map(Player::getId).toList();
+    }
+
+    @Override
+    public void placePlayerShips(String playerId, PlayerMap playerMap) {
 
     }
 
@@ -74,18 +65,13 @@ public class GameImpl implements Game{
     }
 
     @Override
-    public boolean getAllPlayersJoinedCount() {
-        return false;
+    public List<String> getReadyPlayersIds() {
+        return new ArrayList<String>();
     }
 
     @Override
-    public boolean getAllPlayersReadyCount() {
-        return false;
-    }
-
-    @Override
-    public GameState resetBoard() {
-        return null;
+    public void resetSession(){
+        //TODO remove players
     }
 
     @Override
@@ -101,6 +87,11 @@ public class GameImpl implements Game{
     @Override
     public int getPlayerStamina(String player_id) {
         return 0;
+    }
+
+    @Override
+    public GameState resetBoard() {
+        return null;
     }
 }
 
