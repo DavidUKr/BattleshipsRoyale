@@ -54,5 +54,6 @@ public class SessionService {
 
     public void resetSession() {
         game.resetSession();
+        playerReadyIds.clear();
     }
 }
