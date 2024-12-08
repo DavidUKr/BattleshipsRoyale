@@ -39,7 +39,6 @@ public class BattleGrid {
     @Getter
     private final GridCell[][] player2Grid;
 
-    //public final GridCell[][] grid;
     /* grid code
     *  0 - discovered empty
     *  1 - discovered ship team 1
@@ -52,10 +51,10 @@ public class BattleGrid {
     */
 
     private ArrayList<BaseShip> ships=new ArrayList<>();
-    public int team1ShipCells = 0;
-    public int team2ShipCells = 0;
-    public int team1Hits = 0;
-    public int team2Hits = 0;
+//    public int team1ShipCells = 0;
+//    public int team2ShipCells = 0;
+//    public int team1Hits = 0;
+//    public int team2Hits = 0;
 
     /*public BattleGrid() {
         mainGrid = new GridCell[MAIN_GRID_SIZE][MAIN_GRID_SIZE];
@@ -103,27 +102,27 @@ public class BattleGrid {
         // Place a ship horizontally starting at (0,0) of length 4
         for (int i = 0; i < 4; i++) {
             player1Grid[0][i] = new GridCell(4); // 4 for undiscovered ship (team 1)
-            team1ShipCells++;
+//            team1ShipCells++;
 
         }
 
         // Place another ship vertically starting at (5,5) of length 3
         for (int i = 0; i < 3; i++) {
             player1Grid[5 + i][5] = new GridCell(4); // 4 for undiscovered ship (team 1)
-            team1ShipCells++;
+//            team1ShipCells++;
         }
 
         // Hard-code Player 2's grid
         // Place a ship horizontally starting at (2,3) of length 5
         for (int i = 0; i < 5; i++) {
             player2Grid[2][3 + i] = new GridCell(5); // 5 for undiscovered ship (team 2)
-            team2ShipCells++;
+//            team2ShipCells++;
         }
 
         // Place another ship vertically starting at (7,1) of length 2
         for (int i = 0; i < 2; i++) {
             player2Grid[7 + i][1] = new GridCell(5); // 5 for undiscovered ship (team 2)
-            team2ShipCells++;
+//            team2ShipCells++;
         }
 
         // Hard-code the main grid (optional, if you want to see player grids on the main grid)
@@ -192,9 +191,9 @@ public class BattleGrid {
         // Place the ship
         int cellType = (ship.getPlayer_id() == player1_id) ? 4 : 5; // Team 1 or Team 2
         if (ship.getPlayer_id() == player1_id) {
-            team1ShipCells++; // Increment Team 1's total ship cells
+//            team1ShipCells++; // Increment Team 1's total ship cells
         } else {
-            team2ShipCells++; // Increment Team 2's total ship cells
+//            team2ShipCells++; // Increment Team 2's total ship cells
         }
         for (int i = 0; i < shipLength; i++) {
             int placeX = (orientation == 0) ? x + i : x;
@@ -220,7 +219,7 @@ public class BattleGrid {
 
         // Set the ship's coordinates and grid reference
 //        ship.setCoordinates(shipCoordinates);
-        //ship.setGrid(this.grid); // Assuming 'grid' is a field in `BattleGrid`
+        //ship.setGrid(this.grid);
 
         return true;
     }
@@ -239,7 +238,7 @@ public class BattleGrid {
         }
     }
 
-    public boolean hit(int x, int y, int team_id, GridCell[][] grid, int gridWidth, int gridHeight) {
+    public boolean hit(int x, int y, String playerId, GridCell[][] grid, int gridWidth, int gridHeight) {
         // Validate coordinates
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
             System.out.println("Out of bounds: (" + x + ", " + y + ")");
@@ -263,27 +262,26 @@ public class BattleGrid {
                 return true;
 
             case 4: // Undiscovered ship (Team 1)
-                grid[x][y].cellType = 1; // Mark as discovered ship
-                team2Hits++; // Increment hits by Team 2 on Team 1
-                System.out.println("team2Hits: " + team2Hits + ", team1ShipCells: " + team1ShipCells);
-                System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
-                if (team2Hits == team1ShipCells) { // Check if Team 2 has destroyed all of Team 1's ships
-                    isFinished = true;
-                    winningTeamId = 1; // Team 2 wins
-                    System.out.println("Team 2 wins!");
-                }
-                return true;
-
             case 5: // Undiscovered ship (Team 2)
-                grid[x][y].cellType = 2; // Mark as discovered ship
-                team1Hits++; // Increment hits by Team 1 on Team 2
-                System.out.println("team1Hits: " + team1Hits + ", team2ShipCells: " + team2ShipCells);
-                System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");
-                if (team1Hits == team2ShipCells) { // Check if Team 1 has destroyed all of Team 2's ships
-                    isFinished = true;
-                    winningTeamId = 0; // Team 1 wins
-                    System.out.println("Team 1 wins!");
+                for (BaseShip ship : ships) {
+                    if (ship.getCoordinates().contains(x) && ship.getCoordinates().contains(y)) {
+                        ship.apply_damage();
+                        grid[x][y].cellType = (grid[x][y].cellType == 4) ? 1 : 2;
+                        System.out.println("Hit a ship from player " + ship.getPlayer_id() + " at (" + x + ", " + y + ")");
+
+                        if (ship.isDestroyed()) {
+                            System.out.println("Ship from player " + ship.getPlayer_id() + " has been destroyed!");
+                        }
+
+                        if (check_finish(player1_id).equals(player2_id)) {
+                            isFinished = true;
+                            winningTeamId = playerId.equals(player1_id) ? 0 : 1;
+                            System.out.println("Player " + winningTeamId + " wins!");
+                        }
+                        return true;
+                    }
                 }
+
                 return true;
 
             case 6: // Perk type 1
