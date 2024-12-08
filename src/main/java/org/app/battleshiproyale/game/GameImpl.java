@@ -1,5 +1,6 @@
 package org.app.battleshiproyale.game;
 
+import org.app.battleshiproyale.BattleshipRoyaleApplication;
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
 import org.app.battleshiproyale.game.game_elements.GridCell;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
@@ -13,13 +14,15 @@ import java.util.List;
 @Component
 public class GameImpl implements Game{
 
+    private final BattleshipRoyaleApplication battleshipRoyaleApplication;
     private ArrayList<Player> players= new ArrayList<>();;
     private final int MAX_PLAYERS =2;
     private final int PLAYER_GRID_SIZE =10;
     private BattleGrid battleGrid;
 
-    public GameImpl(){
+    public GameImpl(BattleshipRoyaleApplication battleshipRoyaleApplication){
         this.battleGrid = new BattleGrid();
+        this.battleshipRoyaleApplication = battleshipRoyaleApplication;
     }
 
     public void startGame() {
@@ -116,7 +119,7 @@ public class GameImpl implements Game{
 
     @Override
     public GameState getGameState() {
-        return null;
+        return new GameState(battleGrid.getMainGrid(), players);
     }
 
     @Override

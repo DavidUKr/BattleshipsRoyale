@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class Player {
     private final String id; // Track visited cells
-    public int stamina;
+    private int stamina;
     private List<BaseShip> ships;
     private boolean isReadyForBattle=false;
 
@@ -17,6 +17,10 @@ public class Player {
         this.id = id;
         this.stamina = 0;
         this.ships = new ArrayList<>();
+    }
+
+    public void increaseStamina(int amount) {
+        this.stamina+=amount;
     }
 }
 
