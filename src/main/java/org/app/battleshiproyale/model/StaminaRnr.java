@@ -4,6 +4,6 @@ public class StaminaRnr {
 
     
     public static void increaseStamina(Player player){
-        player.stamina++;
+        player.increaseStamina(1);
     }
 }
