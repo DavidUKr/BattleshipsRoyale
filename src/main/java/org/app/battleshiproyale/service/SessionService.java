@@ -15,16 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class SessionService {
 
-    public ConcurrentLinkedQueue<String> playerReadyIds = new ConcurrentLinkedQueue<>();
-
     private final Game game;
     private final MapUtils mapUtils;
 
     public boolean joinPlayerToBattle(String playerId) {
         List<String> joinedPlayers = game.getJoinedPlayersIds();
         if (joinedPlayers.size() < 2  && !joinedPlayers.contains(playerId)) {
-            game.joinPlayer(playerId);
-            return true;
+            return game.joinPlayer(playerId);
         }
 
         return false;
@@ -49,13 +46,10 @@ public class SessionService {
 
     public List<String> getPlayersReadyStatus() {
         return game.getReadyPlayersIds();
-//        //TODO remove provisional logic
-//        return playerReadyIds.toArray(new String[0]);
     }
 
     public void resetSession() {
         game.resetSession();
-        playerReadyIds.clear();
     }
 
 
