@@ -16,8 +16,9 @@ public class MapUtils {
 
     public PlayerMap getPlayerMapFromDTO(PlayerMapDTO playerMapDTO, String player_id) {
         PlayerMap playerMap = new PlayerMap();
+        int ship_index=0;
         for (ShipDTO shipDTO : playerMapDTO.getShips()) {
-            playerMap.addShip(shipUtils.getShipFromDTO(shipDTO, player_id));
+            playerMap.addShip(shipUtils.getShipFromDTO(shipDTO, player_id, ship_index++));
         }
 
         return playerMap;

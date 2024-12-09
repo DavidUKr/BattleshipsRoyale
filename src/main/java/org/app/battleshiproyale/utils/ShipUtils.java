@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class ShipUtils {
 
-    public BaseShip getShipFromDTO(ShipDTO shipDTO, String player_id) {
+    public BaseShip getShipFromDTO(ShipDTO shipDTO, String player_id, int ship_index) {
 
         BaseShip ship = null;
         switch (shipDTO.getShipType()) {
@@ -21,6 +21,9 @@ public class ShipUtils {
             case MEDIUM_SHIP -> ship = new MediumShip(player_id);
             case SMALL_SHIP -> ship = new SmallShip(player_id);
         }
+
+        ship.setShip_id(player_id+"_"+ship_index);
+
         List<Point> coordinates = new ArrayList<>();
         for(int i=0; i<ship.getLength();i++){
             if (shipDTO.getOrientation() == ShipOrientation.HORIZONTAL) {
