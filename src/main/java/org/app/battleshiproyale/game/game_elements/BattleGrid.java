@@ -28,7 +28,6 @@ public class BattleGrid {
     @Getter
     private final GridCell[][] mainGrid;
 
-    //public final GridCell[][] grid;
     /* grid code
     *  0 - discovered empty
     *  1 - discovered ship team 1
@@ -48,10 +47,9 @@ public class BattleGrid {
         // Initialize the main grid with default values
         for (int i = 0; i < MAIN_GRID_SIZE; i++) {
             for (int j = 0; j < MAIN_GRID_SIZE; j++) {
-                mainGrid[i][j] = new GridCell(3);  // 3 for undiscovered empty
+                mainGrid[i][j] = new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY);
             }
         }
-
     }
 
     public void placePlayerGridOnMain(GridCell[][] playerGrid, List<BaseShip> shipsPlayer1, List<BaseShip> shipsPlayer2) {
@@ -64,19 +62,18 @@ public class BattleGrid {
                 mainGrid[startX + i][startY + j] = playerGrid[i][j];
             }
         }
-
         this.shipsPlayer1.addAll(shipsPlayer1);
         this.shipsPlayer2.addAll(shipsPlayer2);
     }
 
 
-    public void generatePerks(int numPerks, int perkType) {
+    public void generatePerks(int numPerks, GridCell.CellType perkType) {
         int perksPlaced = 0;
         while (perksPlaced < numPerks) {
             int x = (int) (Math.random() * MAIN_GRID_SIZE);
             int y = (int) (Math.random() * MAIN_GRID_SIZE);
 
-            if (mainGrid[x][y].cellType == 3) {
+            if (mainGrid[x][y].cellType == GridCell.CellType.UNDISCOVERED_EMPTY) {
                 mainGrid[x][y] = new GridCell(perkType);
                 perksPlaced++;
             }
@@ -93,22 +90,21 @@ public class BattleGrid {
         //TODO identify ship from ships arrays based on ship_id and call ship.apply_damage()
         // Identify cell type and process hit
         switch (grid[x][y].cellType) {
-            case 0: // Already empty
+            case DISCOVERED_EMPTY:
                 System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
                 return false;
 
-            case 1:
-            case 2: // Already hit a ship
+            case DISCOVERED_SHIP_TEAM_1:
+            case DISCOVERED_SHIP_TEAM_2:
                 System.out.println("Already hit a ship at (" + x + ", " + y + ")");
                 return false;
 
-            case 3: // Undiscovered empty
-                grid[x][y].cellType = 0; // Mark as discovered empty
+            case UNDISCOVERED_EMPTY:
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
                 return true;
 
-            case 4: // Undiscovered ship (Team 1)
-                grid[x][y].cellType = 1; // Mark as discovered ship
+            case UNDISCOVERED_SHIP_TEAM_1: // Mark as discovered ship
 //                team2Hits++; // Increment hits by Team 2 on Team 1
 //                System.out.println("team2Hits: " + team2Hits + ", team1ShipCells: " + team1ShipCells);
 //                System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
@@ -120,8 +116,7 @@ public class BattleGrid {
                 //TODO check is finished for player1
                 return true;
 
-            case 5: // Undiscovered ship (Team 2)
-                grid[x][y].cellType = 2; // Mark as discovered ship
+            case UNDISCOVERED_SHIP_TEAM_2: // Mark as discovered ship
 //                team1Hits++; // Increment hits by Team 1 on Team 2
 //                System.out.println("team1Hits: " + team1Hits + ", team2ShipCells: " + team2ShipCells);
 //                System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");
@@ -133,22 +128,21 @@ public class BattleGrid {
                 //TODO check is finished for player2
                 return true;
 
-            case 6: // Perk type 1
-                grid[x][y].cellType = 0; // Mark as discovered empty
+            case UNDISCOVERED_PERK_1:
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Discovered a perk (Type 1) at (" + x + ", " + y + ")");
                 return true;
 
-            case 7: // Perk type 2
-                grid[x][y].cellType = 0; // Mark as discovered empty
+            case UNDISCOVERED_PERK_2:
+                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Discovered a perk (Type 2) at (" + x + ", " + y + ")");
                 return true;
 
-            default: // Invalid cell type
+            default:
                 System.out.println("Unknown cell type at (" + x + ", " + y + ")");
                 return false;
         }
     }
-
 
     //TODO implement looking in ships array
     public boolean check_finish() {

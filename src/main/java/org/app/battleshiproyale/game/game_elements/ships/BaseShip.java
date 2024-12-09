@@ -35,5 +35,4 @@ abstract public class BaseShip {
         return !isAlive;
     }
 
-
 }

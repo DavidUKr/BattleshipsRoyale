@@ -59,12 +59,12 @@ public class GameImpl implements Game{
             GridCell[][] playerGrid=new GridCell[10][10];
             for(BaseShip ship : playerMap.getShips()){
                 for ( Point point : ship.getCoordinates()){
-                    if(playerGrid[point.getX()][point.getY()].cellType!=4 && playerGrid[point.getX()][point.getY()].cellType!=5)
+                    if(playerGrid[point.getX()][point.getY()].cellType!=GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1 && playerGrid[point.getX()][point.getY()].cellType!=GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2)
                         if (playerId==players.get(0).getId()) {
-                            playerGrid[point.getX()][point.getY()] = new GridCell(4, ship.getShip_id());
+                            playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1, ship.getShip_id());
                         }
                         else {
-                            playerGrid[point.getX()][point.getY()] = new GridCell(5, ship.getShip_id());
+                            playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2, ship.getShip_id());
                         }
                 }
             }
@@ -114,7 +114,7 @@ public class GameImpl implements Game{
 
     @Override
     public GameState getGameState() {
-        return new GameState(battleGrid.getMainGrid(), players);
+        return new GameState(battleGrid.getMainGrid(), players, false);
     }
 
     @Override
