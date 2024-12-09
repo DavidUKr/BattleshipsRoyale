@@ -7,11 +7,17 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class GridCell {
 
+    public String ship_id; //Nullable
     public Lock cellLock = new ReentrantLock();
     public CellType cellType;
 
     public GridCell(CellType cellType) {
         this.cellType = cellType;
+    }
+
+    public GridCell(CellType cellType, String ship_id) {
+        this.cellType = cellType;
+        this.ship_id = ship_id;
     }
 
     // Embedded Enum for Cell Types

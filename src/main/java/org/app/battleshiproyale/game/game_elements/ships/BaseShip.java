@@ -2,7 +2,7 @@ package org.app.battleshiproyale.game.game_elements.ships;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.app.battleshiproyale.game.game_elements.GridCell;
+import org.app.battleshiproyale.model.Point;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ abstract public class BaseShip {
     @Getter
     protected boolean isAlive=true;
     @Getter @Setter
-    protected int team_id;
+    protected String player_id;
     @Getter @Setter
-    private GridCell[][] grid;
+    protected String ship_id;
     @Getter @Setter
-    private List<int[]> coordinates;
+    private List<Point> coordinates;
 
-    public BaseShip(int team_id) {
-        this.team_id = team_id;
+    public BaseShip(String player_id) {
+        this.player_id = player_id;
     }
 
     public boolean apply_damage() {
@@ -32,17 +32,7 @@ abstract public class BaseShip {
     }
 
     public boolean isDestroyed() {
-
-        for (int[] coord : coordinates) {
-            int x = coord[0];
-            int y = coord[1];
-
-            if (grid[x][y].cellType != GridCell.CellType.DISCOVERED_SHIP_TEAM_1 && grid[x][y].cellType != GridCell.CellType.DISCOVERED_SHIP_TEAM_2) {
-                return false; // Ship is not completely destroyed
-            }
-        }
-        return true; // All parts of the ship are hit
+        return !isAlive;
     }
-
 
 }

@@ -1,16 +1,19 @@
 package org.app.battleshiproyale.model;
-
-import lombok.Getter;
+import lombok.Data;
 import org.app.battleshiproyale.game.game_elements.GridCell;
 
-@Getter
-public class GameState {
+import java.util.List;
 
-    private GridCell[][] grid;
+@Data
+public class GameState {
+    Integer MAX_X=55;
+    Integer MAX_Y=33;
+    GridCell[][] mainGrid;
+    List<Player> players;
     private boolean isEnd;
 
-    public GameState(GridCell[][] grid, boolean isEnd) {
-        this.grid = grid;
-        this.isEnd = isEnd;
+    public GameState(GridCell[][] mainGrid, List<Player> players, boolean isEnd) {
+        this.mainGrid = mainGrid;
+        this.players = players;
     }
 }
