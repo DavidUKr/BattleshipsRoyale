@@ -39,17 +39,6 @@ public class GameImpl implements Game{
         System.out.println("Winning team: " + (battleGrid.getWinningTeamId() + 1));
     }
 
-    private static void printMap(BattleGrid battleGrid) {
-        System.out.println("\nPlayer 1's Grid:");
-        battleGrid.printPlayerGrid(battleGrid.getPlayer1Grid(),0);
-
-        System.out.println("\nPlayer 2's Grid:");
-        battleGrid.printPlayerGrid(battleGrid.getPlayer2Grid(),1);
-
-        System.out.println("\nMain Grid:");
-        battleGrid.printMainGrid();
-    }
-
     @Override
     public boolean joinPlayer(String playerId) {
         if (players.size() <= MAX_PLAYERS){
@@ -70,13 +59,19 @@ public class GameImpl implements Game{
             GridCell[][] playerGrid=new GridCell[10][10];
             for(BaseShip ship : playerMap.getShips()){
                 for ( Point point : ship.getCoordinates()){
-                    if (playerId==players.get(0).getId())
-                        playerGrid[point.getX()][point.getY()]=new GridCell(4);
-                    else
-                        playerGrid[point.getX()][point.getY()]=new GridCell(5);
+                    if(playerGrid[point.getX()][point.getY()].cellType!=4 && playerGrid[point.getX()][point.getY()].cellType!=5)
+                        if (playerId==players.get(0).getId()) {
+                            playerGrid[point.getX()][point.getY()] = new GridCell(4, ship.getShip_id());
+                        }
+                        else {
+                            playerGrid[point.getX()][point.getY()] = new GridCell(5, ship.getShip_id());
+                        }
                 }
             }
-            this.battleGrid.placePlayerGridOnMain(playerGrid);
+            this.battleGrid.placePlayerGridOnMain(playerGrid,
+                    players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips(),
+                    players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips()
+            );
             return true;
         }
 

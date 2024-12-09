@@ -16,6 +16,8 @@ abstract public class BaseShip {
     @Getter @Setter
     protected String player_id;
     @Getter @Setter
+    protected String ship_id;
+    @Getter @Setter
     private List<Point> coordinates;
 
     public BaseShip(String player_id) {
