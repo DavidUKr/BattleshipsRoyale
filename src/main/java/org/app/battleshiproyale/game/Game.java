@@ -2,6 +2,7 @@ package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface Game {
@@ -13,7 +14,7 @@ public interface Game {
 
     void setPlayerReady(String playerId);
 
-    List<String> getReadyPlayersIds();
+    ArrayList<Player> getReadyPlayersIds();
 
     void resetSession();
 

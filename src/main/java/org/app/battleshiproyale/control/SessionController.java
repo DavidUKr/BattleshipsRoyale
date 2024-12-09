@@ -2,10 +2,12 @@ package org.app.battleshiproyale.control;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.PlayerMapDTO;
 import org.app.battleshiproyale.service.SessionService;
 import org.springframework.http.MediaType;
@@ -55,7 +57,7 @@ public class SessionController {
     }
 
     @GetMapping(value = "/ready", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> getPlayersReadyStatus() {
+    public ResponseEntity<ArrayList<Player>> getPlayersReadyStatus() {
         return ResponseEntity.ok(sessionService.getPlayersReadyStatus());
     }
 }
