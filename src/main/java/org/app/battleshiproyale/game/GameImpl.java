@@ -2,6 +2,8 @@ package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.game.game_elements.BattleGrid;
 import org.app.battleshiproyale.model.Player;
+import org.app.battleshiproyale.game.game_elements.BattlegridRenderer;
+import org.app.battleshiproyale.game.game_elements.GridCell;
 import org.app.battleshiproyale.model.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ public class GameImpl implements Game{
 
     ArrayList<Player> players;
     private final int MAX_PLAYERS =2;
+    public static BattleGrid battleGrid;
 
     public void startGame() {
         //TODO STAMINA JobRnr. ...
@@ -22,7 +25,7 @@ public class GameImpl implements Game{
     public static void main(String[] args) {
         System.out.println("Running Game");
 
-        BattleGrid battleGrid = new BattleGrid();
+        battleGrid = new BattleGrid();
 
 //        printMap(battleGrid);
 
@@ -74,9 +77,29 @@ public class GameImpl implements Game{
         players.clear();
     }
 
+    public GameState resetBoard() {
+        GridCell[][] mainGrid = battleGrid.getMainGrid();
+        boolean isEnd = battleGrid.isFinished();
+//        return new GameState(mainGrid, isEnd);
+        return new GameState();
+    }
+
     @Override
     public HitResult hit(String playerId, HitDTO hitDTO) {
-        return new HitResult();
+        int x = hitDTO.getX();
+        int y = hitDTO.getY();
+        int width = battleGrid.getMAIN_GRID_SIZE();
+        int length = battleGrid.getMAIN_GRID_SIZE();
+        GridCell[][] grid = battleGrid.getMainGrid();
+
+        boolean hitSuccess = battleGrid.hit(x, y, Integer.parseInt(playerId), grid, width, length);
+
+        if (hitSuccess) {
+            GridCell cell = battleGrid.getMainGrid()[x][y];
+            return new HitResult(cell.cellType);
+
+        }
+        return new HitResult(GridCell.CellType.INVALID);
     }
 
     @Override
@@ -89,9 +112,5 @@ public class GameImpl implements Game{
         return 0;
     }
 
-    @Override
-    public GameState resetBoard() {
-        return null;
-    }
 }
 

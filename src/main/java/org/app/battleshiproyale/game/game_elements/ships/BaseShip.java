@@ -32,6 +32,4 @@ abstract public class BaseShip {
     public boolean isDestroyed() {
         return !isAlive;
     }
-
-
 }
