@@ -35,31 +35,31 @@ public class MapUtils {
                 // 3 - my ship not hit
                 // 4 - enemy ship hit
                 switch (grid[i][j].cellType) {
-                    case 0: //discovered empty
+                    case DISCOVERED_EMPTY: //discovered empty
                         dtoGrid[i][j] = 0;
                         break;
-                    case 1: //discovered player0
+                    case DISCOVERED_SHIP_TEAM_1: //discovered player0
                         if (player_index==0)
                             dtoGrid[i][j] = 2;
                         else
                             dtoGrid[i][j] = 4;
                         break;
-                    case 2: //discovered player1
+                    case DISCOVERED_SHIP_TEAM_2: //discovered player1
                         if (player_index==1)
                             dtoGrid[i][j] = 2;
                         else
                             dtoGrid[i][j] = 4;
                         break;
-                    case 3, 6, 7: //undiscovered empty, perk type1, perk type2
+                    case UNDISCOVERED_EMPTY, UNDISCOVERED_PERK_1, UNDISCOVERED_PERK_2: //undiscovered empty, perk type1, perk type2
                         dtoGrid[i][j] = 1;
                         break;
-                    case 4: //undiscovered player0
+                    case UNDISCOVERED_SHIP_TEAM_1: //undiscovered player0
                         if (player_index==0)
                             dtoGrid[i][j] = 3;
                         else
                             dtoGrid[i][j] = 1;
                         break;
-                    case 5: //undiscovered player1
+                    case UNDISCOVERED_SHIP_TEAM_2: //undiscovered player1
                         if (player_index==1)
                             dtoGrid[i][j] = 3;
                         else
