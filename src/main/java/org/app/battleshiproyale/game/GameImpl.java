@@ -15,7 +15,7 @@ import java.util.List;
 public class GameImpl implements Game{
 
     private final BattleshipRoyaleApplication battleshipRoyaleApplication;
-    private ArrayList<Player> players= new ArrayList<>();;
+    private ArrayList<Player> players= new ArrayList<>();
     private final int MAX_PLAYERS =2;
     private final int PLAYER_GRID_SIZE =10;
     private BattleGrid battleGrid;
@@ -93,8 +93,8 @@ public class GameImpl implements Game{
     }
 
     @Override
-    public List<String> getReadyPlayersIds() {
-        return players.stream().map(Player::getId).toList();
+    public ArrayList<Player> getReadyPlayersIds() {
+        return players;
     }
 
     @Override
