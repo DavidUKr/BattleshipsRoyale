@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.Getter;
 import lombok.Setter;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
+import org.app.battleshiproyale.model.Point;
 import org.app.battleshiproyale.model.ShipDTO;
 import org.springframework.stereotype.Component;
 
@@ -87,7 +88,6 @@ public class BattleGrid {
         }
 
         //TODO identify ship from ships arrays based on ship_id and call ship.apply_damage()
-        // Identify cell type and process hit
         switch (grid[x][y].cellType) {
             case DISCOVERED_EMPTY:
                 System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
@@ -103,29 +103,41 @@ public class BattleGrid {
                 System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
                 return true;
 
-            case UNDISCOVERED_SHIP_TEAM_1: // Mark as discovered ship
-//                team2Hits++; // Increment hits by Team 2 on Team 1
-//                System.out.println("team2Hits: " + team2Hits + ", team1ShipCells: " + team1ShipCells);
-//                System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
-//                if (team2Hits == team1ShipCells) { // Check if Team 2 has destroyed all of Team 1's ships
-//                    isFinished = true;
-//                    winningTeamId = 1; // Team 2 wins
-//                    System.out.println("Team 2 wins!");
-//                }
-                //TODO check is finished for player1
+            case UNDISCOVERED_SHIP_TEAM_1:
+                for (BaseShip ship : shipsPlayer1) {
+                    if (ship.getCoordinates().contains(new Point(x, y))) {
+                        ship.apply_damage();
+                        grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_1;
+                        System.out.println("Hit a ship from Player 1 at (" + x + ", " + y + ")");
+
+                        if (ship.isDestroyed()) {
+                            System.out.println("A ship from Player 1 has been destroyed!");
+                        }
+
+                        if (check_finish()) {
+                            System.out.println("All Player 1's ships are destroyed. Team 2 wins!");
+                        }
+                    }
+                }
                 return true;
 
             case UNDISCOVERED_SHIP_TEAM_2: // Mark as discovered ship
-//                team1Hits++; // Increment hits by Team 1 on Team 2
-//                System.out.println("team1Hits: " + team1Hits + ", team2ShipCells: " + team2ShipCells);
-//                System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");
-//                if (team1Hits == team2ShipCells) { // Check if Team 1 has destroyed all of Team 2's ships
-//                    isFinished = true;
-//                    winningTeamId = 0; // Team 1 wins
-//                    System.out.println("Team 1 wins!");
-//                }
-                //TODO check is finished for player2
-                return true;
+               for (BaseShip ship : shipsPlayer2) {
+                   if (ship.getCoordinates().contains(new Point(x, y))) {
+                       ship.apply_damage();
+                       grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_2;
+                       System.out.println("Hit a ship from Player 2 at (" + x + ", " + y + ")");
+
+                       if (ship.isDestroyed()) {
+                           System.out.println("A ship from Player 2 has been destroyed!");
+                       }
+
+                       if (check_finish()) {
+                           System.out.println("All Player 2's ships are destroyed. Team 1 wins!");
+                       }
+                   }
+               }
+               return true;
 
             case UNDISCOVERED_PERK_1:
                 grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
@@ -143,16 +155,26 @@ public class BattleGrid {
         }
     }
 
-    //TODO implement looking in ships array
     public boolean check_finish() {
-//        for (BaseShip ship : ships) {
-//            if (ship.getPlayer_id().equals(player_id) && !ship.isDestroyed()) {
-//                return player_id; // Team still has undestroyed ships
-//            }
-//        }
-//        return (player_id.equals(player1_id)) ? player2_id : player1_id; // All ships of the team are destroyed
-        //TODO check each boat of the said player
+        // Check if all ships of Player 1 are destroyed
+        boolean allPlayer1ShipsDestroyed = shipsPlayer1.stream().allMatch(BaseShip::isDestroyed);
+
+        // Check if all ships of Player 2 are destroyed
+        boolean allPlayer2ShipsDestroyed = shipsPlayer2.stream().allMatch(BaseShip::isDestroyed);
+
+        // Determine if the game is finished
+        if (allPlayer1ShipsDestroyed) {
+            isFinished = true;
+            winningTeamId = 2; // Team 2 wins
+            return true;
+        } else if (allPlayer2ShipsDestroyed) {
+            isFinished = true;
+            winningTeamId = 1; // Team 1 wins
+            System.out.println("All Player 2's ships are destroyed. Team 1 wins!");
+            return true;
+        }
+
+        // Game is not finished
         return false;
     }
-
 }
