@@ -68,7 +68,7 @@ public class GameImpl implements Game{
                 }
             }
             this.battleGrid.placePlayerGridOnMain(playerGrid,
-                    players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips()
+                    players.stream().filter(player -> player.getId().equals(playerId)).findFirst().get().getShips()
             );
             return true;
         }
