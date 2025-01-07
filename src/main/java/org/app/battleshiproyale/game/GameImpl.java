@@ -59,17 +59,15 @@ public class GameImpl implements Game{
             GridCell[][] playerGrid=new GridCell[10][10];
             for(BaseShip ship : playerMap.getShips()){
                 for ( Point point : ship.getCoordinates()){
-                    if(playerGrid[point.getX()][point.getY()].cellType!=GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1 && playerGrid[point.getX()][point.getY()].cellType!=GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2)
-                        if (playerId==players.get(0).getId()) {
-                            playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1, ship.getShip_id());
-                        }
-                        else {
-                            playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2, ship.getShip_id());
-                        }
+                    if (playerId.equals(players.get(0).getId())) {
+                        playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1, ship.getShip_id());
+                    }
+                    else {
+                        playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2, ship.getShip_id());
+                    }
                 }
             }
             this.battleGrid.placePlayerGridOnMain(playerGrid,
-                    players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips(),
                     players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips()
             );
             return true;

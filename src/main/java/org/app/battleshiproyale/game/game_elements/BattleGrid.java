@@ -52,7 +52,7 @@ public class BattleGrid {
         }
     }
 
-    public void placePlayerGridOnMain(GridCell[][] playerGrid, List<BaseShip> shipsPlayer1, List<BaseShip> shipsPlayer2) {
+    public void placePlayerGridOnMain(GridCell[][] playerGrid, List<BaseShip> shipsPlayer) {
         int startX = (int) (Math.random() * (MAIN_GRID_SIZE - PLAYER_GRID_SIZE));
         int startY = (int) (Math.random() * (MAIN_GRID_SIZE - PLAYER_GRID_SIZE));
 
@@ -62,8 +62,7 @@ public class BattleGrid {
                 mainGrid[startX + i][startY + j] = playerGrid[i][j];
             }
         }
-        this.shipsPlayer1.addAll(shipsPlayer1);
-        this.shipsPlayer2.addAll(shipsPlayer2);
+        this.shipsPlayer1.addAll(shipsPlayer);
     }
 
 
