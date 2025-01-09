@@ -7,13 +7,10 @@ import org.app.battleshiproyale.game.game_elements.GridCell.CellType;
 @Getter
 public class HitResult {
     private CellType cellType;
+    String message;
 
-    public HitResult(){}
-
-    public HitResult(CellType cellType) {
+    public HitResult(CellType cellType, String s) {
         this.cellType = cellType;
-    }
-
-    public HitResult(boolean b, String s) {
+        this.message = s;
     }
 }

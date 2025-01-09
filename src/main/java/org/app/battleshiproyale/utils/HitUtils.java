@@ -18,6 +18,7 @@ public class HitUtils {
             hitResultDTO.setHitResult(4);
         else hitResultDTO.setHitResult(0);
 
+        hitResultDTO.setMessage(hitResult.getMessage());
         return hitResultDTO;
     }
 }

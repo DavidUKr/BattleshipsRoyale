@@ -21,7 +21,7 @@ public class GameService {
 
     public HitResultDTO hit(String player_id, HitDTO hitDTO) {
 
-        return hitUtils.getDTOfromHitResult(game.hit(hitDTO));
+        return hitUtils.getDTOfromHitResult(game.hit(player_id, hitDTO));
     }
 
     public GameStateDTO getGameState(String player_id) {

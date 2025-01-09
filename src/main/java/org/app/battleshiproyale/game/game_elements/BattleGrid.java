@@ -106,7 +106,7 @@ public class BattleGrid {
         }
     }
 
-    public boolean hit(int x, int y, String team_id, GridCell[][] grid, int gridWidth, int gridHeight, Player player) {
+    public boolean hit(int x, int y, Player player) {
         // Validate stamina before proceeding
         final int staminaCostPerHit = 10;
         if (player.getStamina() < staminaCostPerHit) {
@@ -144,7 +144,7 @@ public class BattleGrid {
                 for (BaseShip ship : shipsPlayer1) {
                     if (ship.getCoordinates().contains(new Point(x, y))) {
                         ship.apply_damage();
-                        grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_1;
+                        mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_1;
                         System.out.println("Hit a ship from Player 1 at (" + x + ", " + y + ")");
 
                         if (ship.isDestroyed()) {
@@ -165,7 +165,7 @@ public class BattleGrid {
                for (BaseShip ship : shipsPlayer2) {
                    if (ship.getCoordinates().contains(new Point(x, y))) {
                        ship.apply_damage();
-                       grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_2;
+                       mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_2;
                        System.out.println("Hit a ship from Player 2 at (" + x + ", " + y + ")");
 
                        if (ship.isDestroyed()) {
@@ -184,12 +184,12 @@ public class BattleGrid {
                 return true;
 
             case UNDISCOVERED_PERK_1:
-                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
+                mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Discovered a perk (Type 1) at (" + x + ", " + y + ")");
                 return true;
 
             case UNDISCOVERED_PERK_2:
-                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
+                mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Discovered a perk (Type 2) at (" + x + ", " + y + ")");
                 return true;
 
