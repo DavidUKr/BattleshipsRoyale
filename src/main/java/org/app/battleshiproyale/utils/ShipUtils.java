@@ -27,10 +27,10 @@ public class ShipUtils {
         List<Point> coordinates = new ArrayList<>();
         for(int i=0; i<ship.getLength();i++){
             if (shipDTO.getOrientation() == ShipOrientation.HORIZONTAL) {
-                coordinates.add(new Point(shipDTO.getFirstCell_coordinates().getX()+ i, shipDTO.getFirstCell_coordinates().getY()));
+                coordinates.add(new Point(shipDTO.getFirstCell_coordinates().getX(), shipDTO.getFirstCell_coordinates().getY()+i));
             }
             else if (shipDTO.getOrientation() == ShipOrientation.VERTICAL) {
-                coordinates.add(new Point(shipDTO.getFirstCell_coordinates().getX(), shipDTO.getFirstCell_coordinates().getY()+1));
+                coordinates.add(new Point(shipDTO.getFirstCell_coordinates().getX()+i, shipDTO.getFirstCell_coordinates().getY()));
             }
         }
         ship.setCoordinates(coordinates);

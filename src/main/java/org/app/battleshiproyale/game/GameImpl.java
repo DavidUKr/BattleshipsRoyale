@@ -57,6 +57,13 @@ public class GameImpl implements Game{
     public boolean placePlayerShips(String playerId, PlayerMap playerMap) {
         if (getJoinedPlayersIds().contains(playerId)){
             GridCell[][] playerGrid=new GridCell[10][10];
+            //init grid
+            for(int i=0;i<10;i++){
+                for(int j=0;j<10;j++){
+                    playerGrid[i][j]=new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY);
+                }
+            }
+            //place ships
             for(BaseShip ship : playerMap.getShips()){
                 for ( Point point : ship.getCoordinates()){
                     if (playerId.equals(players.get(0).getId())) {
@@ -112,7 +119,7 @@ public class GameImpl implements Game{
 
     @Override
     public GameState getGameState() {
-        return new GameState(battleGrid.getMainGrid(), players, false);
+        return new GameState(battleGrid.getMainGrid(), players, false, battleGrid.getMAIN_GRID_SIZE_X(), battleGrid.getMAIN_GRID_SIZE_Y());
     }
 
     @Override
