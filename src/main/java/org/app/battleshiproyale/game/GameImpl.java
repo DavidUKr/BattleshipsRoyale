@@ -132,16 +132,15 @@ public class GameImpl implements Game {
 
         if (player == null) {
             System.out.println("Player not found: " + playerId);
-            return new HitResult(false, "Player not found.");
+            return new HitResult(GridCell.CellType.INVALID, "Player not found.");
         }
 
-        boolean hitSuccessful = battleGrid.hit(hitDTO.getX(), hitDTO.getY(), player.getId(),
-                battleGrid.getMainGrid(), 100, 100, player);
+        boolean hitSuccessful = battleGrid.hit(hitDTO.getX(), hitDTO.getY(), player);
 
         if (hitSuccessful) {
-            return new HitResult(true, "Hit successful!");
+            return new HitResult(GridCell.CellType.HIT_ENEMY_SHIP, "Hit successful!");
         } else {
-            return new HitResult(false, "Failed to execute hit.");
+            return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Failed to execute hit.");
         }
     }
 

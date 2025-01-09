@@ -31,7 +31,8 @@ public class GridCell {
         UNDISCOVERED_SHIP_TEAM_2(5),
         UNDISCOVERED_PERK_1(6),
         UNDISCOVERED_PERK_2(7),
-        INVALID(-1);
+        INVALID(-1),
+        HIT_ENEMY_SHIP(10);
 
         private final int code;
 

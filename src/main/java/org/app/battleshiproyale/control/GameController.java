@@ -18,6 +18,11 @@ public class GameController {
 
     private final GameService gameService;
 
+    @Operation(summary = """
+            output Integer
+            0 - discovered empty;
+            4 - enemy ship hit;
+            """)
     @PostMapping(value = "/hit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<HitResultDTO> hit(@RequestParam String player_id, @RequestBody HitDTO hitDTO) {
         HitResultDTO hitResult = gameService.hit(player_id, hitDTO);
