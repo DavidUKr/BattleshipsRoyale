@@ -20,12 +20,15 @@ public class GameStateUtils {
     public GameStateDTO getDTOfromGameState(GameState gameState, String forPlayerId) {
 
         GameStateDTO gameStateDTO = new GameStateDTO();
-        if(forPlayerId.equals(gameState.getPlayers().get(0).getId()))
-            gameStateDTO.setMainGrid(mapUtils.getDTOfromGridMatrix(gameState.getMainGrid(), 0, gameState.getMAX_X(), gameState.getMAX_Y()));
-        else if(forPlayerId.equals(gameState.getPlayers().get(1).getId()))
-            gameStateDTO.setMainGrid(mapUtils.getDTOfromGridMatrix(gameState.getMainGrid(), 1, gameState.getMAX_X(), gameState.getMAX_Y()));
-        else
-            return gameStateDTO;
+        if (!gameState.getPlayers().isEmpty()) {
+            if (forPlayerId.equals(gameState.getPlayers().get(0).getId()))
+                gameStateDTO.setMainGrid(mapUtils.getDTOfromGridMatrix(gameState.getMainGrid(), 0, gameState.getMAX_X(), gameState.getMAX_Y()));
+            else if (forPlayerId.equals(gameState.getPlayers().get(1).getId()))
+                gameStateDTO.setMainGrid(mapUtils.getDTOfromGridMatrix(gameState.getMainGrid(), 1, gameState.getMAX_X(), gameState.getMAX_Y()));
+            else
+                return gameStateDTO;
+        }
+        else throw new RuntimeException("No players");
 
         List<PlayerDTO> playerDTOs = new ArrayList<>();
         for (Player p : gameState.getPlayers()) {

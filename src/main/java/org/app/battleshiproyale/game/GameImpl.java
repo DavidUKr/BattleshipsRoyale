@@ -78,20 +78,25 @@ public class GameImpl implements Game {
     public boolean placePlayerShips(String playerId, PlayerMap playerMap) {
         if (getJoinedPlayersIds().contains(playerId)){
             GridCell[][] playerGrid=new GridCell[10][10];
+            //init grid
+            for(int i=0;i<10;i++){
+                for(int j=0;j<10;j++){
+                    playerGrid[i][j]=new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY);
+                }
+            }
+            //place ships
             for(BaseShip ship : playerMap.getShips()){
                 for ( Point point : ship.getCoordinates()){
-                    if(playerGrid[point.getX()][point.getY()].cellType!=GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1 && playerGrid[point.getX()][point.getY()].cellType!=GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2)
-                        if (playerId==players.get(0).getId()) {
-                            playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1, ship.getShip_id());
-                        }
-                        else {
-                            playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2, ship.getShip_id());
-                        }
+                    if (playerId.equals(players.get(0).getId())) {
+                        playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1, ship.getShip_id());
+                    }
+                    else {
+                        playerGrid[point.getX()][point.getY()] = new GridCell(GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2, ship.getShip_id());
+                    }
                 }
             }
             this.battleGrid.placePlayerGridOnMain(playerGrid,
-                    players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips(),
-                    players.stream().filter(player -> player.getId()==playerId).findFirst().get().getShips()
+                    players.stream().filter(player -> player.getId().equals(playerId)).findFirst().get().getShips()
             );
             return true;
         }
@@ -152,7 +157,7 @@ public class GameImpl implements Game {
 
     @Override
     public GameState getGameState() {
-        return new GameState(battleGrid.getMainGrid(), players, false);
+        return new GameState(battleGrid.getMainGrid(), players, false, battleGrid.getMAIN_GRID_SIZE_X(), battleGrid.getMAIN_GRID_SIZE_Y());
     }
 
     @Override
