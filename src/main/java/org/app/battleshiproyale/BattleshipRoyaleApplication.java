@@ -16,17 +16,15 @@ public class BattleshipRoyaleApplication {
 
     @Bean
     public CorsFilter corsFilter() {
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    CorsConfiguration config = new CorsConfiguration();
-    
-    config.setAllowCredentials(true);
-    config.addAllowedOrigin("https://battle-ship-royale.web.app");
-    config.addAllowedOrigin("http://localhost:3000"); 
-    config.addAllowedHeader("*");
-    config.addAllowedMethod("*");
-
-    source.registerCorsConfiguration("/**", config);
-    return new CorsFilter(source);
-}
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true); 
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://battle-ship-royale.web.app");
+        config.addAllowedOrigin("https://battle-ship-royale.web.app/"); 
+        config.addAllowedHeader("*"); 
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config); 
+        return new CorsFilter(source);
+    }
 }

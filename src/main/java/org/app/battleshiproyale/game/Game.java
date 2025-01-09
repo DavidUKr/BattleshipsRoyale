@@ -2,22 +2,31 @@ package org.app.battleshiproyale.game;
 
 import org.app.battleshiproyale.model.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface Game {
     boolean joinPlayer(String playerId);
 
-    void placePlayerShips(String playerId, PlayerMapDTO playerMapDTO);
+    List<String> getJoinedPlayersIds();
+
+    boolean placePlayerShips(String playerId, PlayerMap playerMap);
 
     void setPlayerReady(String playerId);
 
-    boolean getAllPlayersJoinedCount(); //0,1,2
+    ArrayList<Player> getReadyPlayersIds();
 
-    boolean getAllPlayersReadyCount(); //0,1,2
+    void resetSession();
 
-    GameStateDTO resetBoard();
-
-    HitResultDTO hit(String playerId, HitDTO hitDTO);
+    HitResult hit(String playerId, HitDTO hitDTO);//look into HitResult //
 
     boolean usePerk(String playerId, PerkDTO perkDTO);
 
     int getPlayerStamina (String player_id);
+
+    GameState getGameState();
+
+    GameState resetBoard();//look into model.GameState
+
+    void startGame();
 }

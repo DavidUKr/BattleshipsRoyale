@@ -80,7 +80,25 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jobrunr</groupId>
+            <artifactId>jobrunr-spring-boot-3-starter</artifactId>
+            <version>7.2.2</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central Repository</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>JobRunrPro-releases</id>
+            <name>JobRunr Pro Repository</name>
+            <url>https://repo.jobrunr.io/releases</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
