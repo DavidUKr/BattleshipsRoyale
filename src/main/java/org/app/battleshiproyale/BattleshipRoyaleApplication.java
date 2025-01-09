@@ -19,13 +19,11 @@ public class BattleshipRoyaleApplication {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); 
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://battleship-royale.web.app");
-        config.addAllowedOrigin("https://battleship-royale.web.app/");
-        config.addAllowedOriginPattern("https://battleship-royale.*");
-        config.addAllowedHeader("*");
+        config.addAllowedOrigin("http://localhost:3000"); 
+        config.addAllowedHeader("*"); 
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config); 
+        
         return new CorsFilter(source);
     }
 }
