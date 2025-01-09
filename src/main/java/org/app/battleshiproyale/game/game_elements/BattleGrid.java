@@ -115,14 +115,14 @@ public class BattleGrid {
         }
 
         // Validate coordinates
-        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
+        if (x < 0 || x >= MAIN_GRID_SIZE_X || y < 0 || y >= MAIN_GRID_SIZE_Y) {
             System.out.println("Out of bounds: (" + x + ", " + y + ")");
             return false;
         }
 
         //TODO identify ship from ships arrays based on ship_id and call ship.apply_damage()
         // Identify cell type and process hit
-        switch (grid[x][y].cellType) {
+        switch (mainGrid[x][y].cellType) {
             case DISCOVERED_EMPTY:
                 System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
                 return false;
@@ -133,7 +133,7 @@ public class BattleGrid {
                 return false;
 
             case UNDISCOVERED_EMPTY:
-                grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
+                mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
                 player.decreaseStamina(staminaCostPerHit);
                 System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",

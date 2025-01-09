@@ -1,5 +1,9 @@
 package org.app.battleshiproyale.model;
 
-public class HitResultDTO {
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
+@Data
+public class HitResultDTO {
+    private Integer hitResult; //0 or 4
 }

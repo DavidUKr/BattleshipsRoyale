@@ -8,6 +8,7 @@ import org.app.battleshiproyale.model.HitDTO;
 import org.app.battleshiproyale.model.HitResultDTO;
 import org.app.battleshiproyale.model.PerkDTO;
 import org.app.battleshiproyale.utils.GameStateUtils;
+import org.app.battleshiproyale.utils.HitUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,10 +17,11 @@ public class GameService {
 
     private final Game game;
     private final GameStateUtils gameStateUtils;
+    private final HitUtils hitUtils;
 
     public HitResultDTO hit(String player_id, HitDTO hitDTO) {
-//        return game.hit(player_id, hitDTO);
-        return new HitResultDTO();
+
+        return hitUtils.getDTOfromHitResult(game.hit(hitDTO));
     }
 
     public GameStateDTO getGameState(String player_id) {

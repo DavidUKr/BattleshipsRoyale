@@ -1,6 +1,7 @@
 package org.app.battleshiproyale.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.app.battleshiproyale.game.game_elements.GridCell.CellType;
 
 @Getter
