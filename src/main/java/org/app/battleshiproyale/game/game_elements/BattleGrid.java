@@ -21,11 +21,16 @@ public class BattleGrid {
     @Getter
     private int winningTeamId=-1;
     @Getter
-    private final int MAIN_GRID_SIZE = 100;
+    private final int MAIN_GRID_SIZE_X = 33;
+    @Getter
+    private final int MAIN_GRID_SIZE_Y = 33;
     @Getter
     private final int PLAYER_GRID_SIZE = 10;
     @Getter
     private final GridCell[][] mainGrid;
+
+    private int other_player_map_x=-1;
+    private int other_player_map_y=-1;
 
     /* grid code
     *  0 - discovered empty
@@ -41,19 +46,39 @@ public class BattleGrid {
     private ArrayList<BaseShip> shipsPlayer2=new ArrayList<>();
 
     public BattleGrid() {
-        mainGrid = new GridCell[MAIN_GRID_SIZE][MAIN_GRID_SIZE];
+        mainGrid = new GridCell[MAIN_GRID_SIZE_X][MAIN_GRID_SIZE_Y];
 
         // Initialize the main grid with default values
-        for (int i = 0; i < MAIN_GRID_SIZE; i++) {
-            for (int j = 0; j < MAIN_GRID_SIZE; j++) {
+        for (int i = 0; i < MAIN_GRID_SIZE_X; i++) {
+            for (int j = 0; j < MAIN_GRID_SIZE_Y; j++) {
                 mainGrid[i][j] = new GridCell(GridCell.CellType.UNDISCOVERED_EMPTY);
             }
         }
     }
 
     public void placePlayerGridOnMain(GridCell[][] playerGrid, List<BaseShip> shipsPlayer) {
-        int startX = (int) (Math.random() * (MAIN_GRID_SIZE - PLAYER_GRID_SIZE));
-        int startY = (int) (Math.random() * (MAIN_GRID_SIZE - PLAYER_GRID_SIZE));
+        boolean isPlacedGood = false;
+        int startX = -1;
+        int startY = -1;
+
+        while (!isPlacedGood) {
+            startX = (int) (Math.random() * (MAIN_GRID_SIZE_X - PLAYER_GRID_SIZE));
+            startY = (int) (Math.random() * (MAIN_GRID_SIZE_Y - PLAYER_GRID_SIZE));
+
+            if (other_player_map_x == -1) {
+                other_player_map_x = startX;
+                other_player_map_y = startY;
+                isPlacedGood = true;
+            } else {
+                if (startX < other_player_map_x - 10 || startX > other_player_map_x + 10) {
+                    isPlacedGood = true;
+                } else if (startY < other_player_map_y - 10 || startY > other_player_map_y + 10) {
+                    isPlacedGood = true;
+                }
+            }
+        }
+
+        System.out.println("Placing player grid " + startX + " " + startY);
 
         // Copy the player grid to the main grid
         for (int i = 0; i < PLAYER_GRID_SIZE; i++) {
@@ -68,8 +93,8 @@ public class BattleGrid {
     public void generatePerks(int numPerks, GridCell.CellType perkType) {
         int perksPlaced = 0;
         while (perksPlaced < numPerks) {
-            int x = (int) (Math.random() * MAIN_GRID_SIZE);
-            int y = (int) (Math.random() * MAIN_GRID_SIZE);
+            int x = (int) (Math.random() * MAIN_GRID_SIZE_X);
+            int y = (int) (Math.random() * MAIN_GRID_SIZE_Y);
 
             if (mainGrid[x][y].cellType == GridCell.CellType.UNDISCOVERED_EMPTY) {
                 mainGrid[x][y] = new GridCell(perkType);
