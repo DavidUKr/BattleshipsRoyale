@@ -22,6 +22,7 @@ public class BattleshipRoyaleApplication {
         config.setAllowCredentials(true); 
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://battle-ship-royale.web.app");
+        config.addAllowedOrigin("https://battle-ship-royale.web.app/"); 
         config.addAllowedHeader("*"); 
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config); 
