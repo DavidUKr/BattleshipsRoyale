@@ -23,19 +23,18 @@ public class BattleshipRoyaleApplication {
     }
 
     @Configuration
-public class DynamicCorsConfig {
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000"); 
-        config.addAllowedOrigin("https://battle-ship-royale.web.app");
-        config.addAllowedMethod("*"); 
-        config.addAllowedHeader("*"); 
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+    public class DynamicCorsConfig {
+        @Bean
+        public CorsFilter corsFilter() {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowCredentials(true);
+            config.addAllowedOrigin("https://battle-ship-royale.web.app");
+            config.addAllowedMethod("*");
+            config.addAllowedHeader("*");
+    
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", config);
+            return new CorsFilter(source);
+        }
     }
-}
 }
