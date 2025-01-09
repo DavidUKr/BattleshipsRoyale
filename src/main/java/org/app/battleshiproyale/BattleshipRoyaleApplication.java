@@ -22,7 +22,6 @@ public class BattleshipRoyaleApplication {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://battleship-royale.web.app");
         config.addAllowedOrigin("https://battleship-royale.web.app/");
-        config.addAllowedOrigin("https://battleship-royale.web.app/");
         config.addAllowedOriginPattern("https://battleship-royale.*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
