@@ -15,12 +15,22 @@ public class Player {
 
     public Player(String id) {
         this.id = id;
-        this.stamina = 0;
+        this.stamina = 100;
         this.ships = new ArrayList<>();
     }
 
     public void increaseStamina(int amount) {
-        this.stamina+=amount;
+        // Increase stamina and cap it at 100
+        this.stamina = Math.min(100, this.stamina + amount);
+    }
+
+    public void decreaseStamina(int amount) {
+        // Decrease stamina but ensure it doesn't go below 0
+        this.stamina = Math.max(0, this.stamina - amount);
+    }
+
+    public int getStamina() {
+        return this.stamina;
     }
 }
 

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.Getter;
 import lombok.Setter;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
+import org.app.battleshiproyale.model.Player;
+import org.app.battleshiproyale.model.Point;
+import org.app.battleshiproyale.model.ShipDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -103,7 +106,14 @@ public class BattleGrid {
         }
     }
 
-    public boolean hit(int x, int y, int team_id, GridCell[][] grid, int gridWidth, int gridHeight) {
+    public boolean hit(int x, int y, String team_id, GridCell[][] grid, int gridWidth, int gridHeight, Player player) {
+        // Validate stamina before proceeding
+        final int staminaCostPerHit = 10;
+        if (player.getStamina() < staminaCostPerHit) {
+            System.out.printf("Player %s does not have enough stamina to execute a hit!%n", player.getId());
+            return false;
+        }
+
         // Validate coordinates
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
             System.out.println("Out of bounds: (" + x + ", " + y + ")");
@@ -125,30 +135,52 @@ public class BattleGrid {
             case UNDISCOVERED_EMPTY:
                 grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
+                player.decreaseStamina(staminaCostPerHit);
+                System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
+                        player.getId(), staminaCostPerHit, player.getStamina());
                 return true;
 
-            case UNDISCOVERED_SHIP_TEAM_1: // Mark as discovered ship
-//                team2Hits++; // Increment hits by Team 2 on Team 1
-//                System.out.println("team2Hits: " + team2Hits + ", team1ShipCells: " + team1ShipCells);
-//                System.out.println("Hit a ship from Team 1 at (" + x + ", " + y + ")");
-//                if (team2Hits == team1ShipCells) { // Check if Team 2 has destroyed all of Team 1's ships
-//                    isFinished = true;
-//                    winningTeamId = 1; // Team 2 wins
-//                    System.out.println("Team 2 wins!");
-//                }
-                //TODO check is finished for player1
+            case UNDISCOVERED_SHIP_TEAM_1:
+                for (BaseShip ship : shipsPlayer1) {
+                    if (ship.getCoordinates().contains(new Point(x, y))) {
+                        ship.apply_damage();
+                        grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_1;
+                        System.out.println("Hit a ship from Player 1 at (" + x + ", " + y + ")");
+
+                        if (ship.isDestroyed()) {
+                            System.out.println("A ship from Player 1 has been destroyed!");
+                        }
+
+                        if (check_finish()) {
+                            System.out.println("All Player 1's ships are destroyed. Team 2 wins!");
+                        }
+                    }
+                }
+                player.decreaseStamina(staminaCostPerHit);
+                System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
+                        player.getId(), staminaCostPerHit, player.getStamina());
                 return true;
 
             case UNDISCOVERED_SHIP_TEAM_2: // Mark as discovered ship
-//                team1Hits++; // Increment hits by Team 1 on Team 2
-//                System.out.println("team1Hits: " + team1Hits + ", team2ShipCells: " + team2ShipCells);
-//                System.out.println("Hit a ship from Team 2 at (" + x + ", " + y + ")");
-//                if (team1Hits == team2ShipCells) { // Check if Team 1 has destroyed all of Team 2's ships
-//                    isFinished = true;
-//                    winningTeamId = 0; // Team 1 wins
-//                    System.out.println("Team 1 wins!");
-//                }
-                //TODO check is finished for player2
+               for (BaseShip ship : shipsPlayer2) {
+                   if (ship.getCoordinates().contains(new Point(x, y))) {
+                       ship.apply_damage();
+                       grid[x][y].cellType = GridCell.CellType.DISCOVERED_SHIP_TEAM_2;
+                       System.out.println("Hit a ship from Player 2 at (" + x + ", " + y + ")");
+
+                       if (ship.isDestroyed()) {
+                           System.out.println("A ship from Player 2 has been destroyed!");
+                       }
+
+                       if (check_finish()) {
+                           System.out.println("All Player 2's ships are destroyed. Team 1 wins!");
+                       }
+                   }
+               }
+                player.decreaseStamina(staminaCostPerHit);
+                System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
+                        player.getId(), staminaCostPerHit, player.getStamina());
+
                 return true;
 
             case UNDISCOVERED_PERK_1:
@@ -165,6 +197,7 @@ public class BattleGrid {
                 System.out.println("Unknown cell type at (" + x + ", " + y + ")");
                 return false;
         }
+
     }
 
     //TODO implement looking in ships array
