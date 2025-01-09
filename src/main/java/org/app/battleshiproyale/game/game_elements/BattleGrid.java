@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.Getter;
 import lombok.Setter;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
+import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.Point;
 import org.app.battleshiproyale.model.ShipDTO;
 import org.springframework.stereotype.Component;
@@ -81,14 +82,20 @@ public class BattleGrid {
         }
     }
 
-    public boolean hit(int x, int y, int team_id, GridCell[][] grid, int gridWidth, int gridHeight) {
+    public boolean hit(int x, int y, String team_id, GridCell[][] grid, int gridWidth, int gridHeight, Player player) {
+        // Validate stamina before proceeding
+        final int staminaCostPerHit = 10;
+        if (player.getStamina() < staminaCostPerHit) {
+            System.out.printf("Player %s does not have enough stamina to execute a hit!%n", player.getId());
+            return false;
+        }
+
         // Validate coordinates
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
             System.out.println("Out of bounds: (" + x + ", " + y + ")");
             return false;
         }
 
-        //TODO identify ship from ships arrays based on ship_id and call ship.apply_damage()
         switch (grid[x][y].cellType) {
             case DISCOVERED_EMPTY:
                 System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
@@ -102,6 +109,9 @@ public class BattleGrid {
             case UNDISCOVERED_EMPTY:
                 grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Missed! Hit empty cell at (" + x + ", " + y + ")");
+                player.decreaseStamina(staminaCostPerHit);
+                System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
+                        player.getId(), staminaCostPerHit, player.getStamina());
                 return true;
 
             case UNDISCOVERED_SHIP_TEAM_1:
@@ -120,6 +130,9 @@ public class BattleGrid {
                         }
                     }
                 }
+                player.decreaseStamina(staminaCostPerHit);
+                System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
+                        player.getId(), staminaCostPerHit, player.getStamina());
                 return true;
 
             case UNDISCOVERED_SHIP_TEAM_2: // Mark as discovered ship
@@ -138,7 +151,10 @@ public class BattleGrid {
                        }
                    }
                }
-               return true;
+                player.decreaseStamina(staminaCostPerHit);
+                System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
+                        player.getId(), staminaCostPerHit, player.getStamina());
+                return true;
 
             case UNDISCOVERED_PERK_1:
                 grid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
@@ -154,6 +170,7 @@ public class BattleGrid {
                 System.out.println("Unknown cell type at (" + x + ", " + y + ")");
                 return false;
         }
+
     }
 
     public boolean check_finish() {

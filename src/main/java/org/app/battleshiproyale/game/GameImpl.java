@@ -6,27 +6,48 @@ import org.app.battleshiproyale.game.game_elements.GridCell;
 import org.app.battleshiproyale.game.game_elements.ships.BaseShip;
 import org.app.battleshiproyale.model.Player;
 import org.app.battleshiproyale.model.*;
+import org.jobrunr.scheduling.JobScheduler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Component
-public class GameImpl implements Game{
+public class GameImpl implements Game {
 
     private final BattleshipRoyaleApplication battleshipRoyaleApplication;
     private ArrayList<Player> players= new ArrayList<>();
     private final int MAX_PLAYERS =2;
     private final int PLAYER_GRID_SIZE =10;
     private BattleGrid battleGrid;
+    private JobScheduler jobScheduler;
 
-    public GameImpl(BattleshipRoyaleApplication battleshipRoyaleApplication){
+    public GameImpl(BattleshipRoyaleApplication battleshipRoyaleApplication, JobScheduler jobScheduler){
         this.battleGrid = new BattleGrid();
         this.battleshipRoyaleApplication = battleshipRoyaleApplication;
+        this.jobScheduler = jobScheduler;
     }
 
+    @Override
     public void startGame() {
-        //TODO STAMINA JobRnr. ...
+        System.out.println("Game started. Scheduling stamina regeneration job.");
+
+        // Regenerate stamina every 10 seconds
+        jobScheduler.scheduleRecurrently("stamina-regeneration", Duration.ofSeconds(1), this::regenerateStamina);
+    }
+
+    private void regenerateStamina() {
+        for (Player player : players) {
+            if (player.getStamina() < 100) {
+                player.increaseStamina(10);
+                System.out.printf("Player %s stamina increased to %d.%n", player.getId(), player.getStamina());
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -99,7 +120,24 @@ public class GameImpl implements Game{
 
     @Override
     public HitResult hit(String playerId, HitDTO hitDTO) {
-        return new HitResult();
+        Player player = players.stream()
+                .filter(p -> p.getId().equals(playerId))
+                .findFirst()
+                .orElse(null);
+
+        if (player == null) {
+            System.out.println("Player not found: " + playerId);
+            return new HitResult(false, "Player not found.");
+        }
+
+        boolean hitSuccessful = battleGrid.hit(hitDTO.getX(), hitDTO.getY(), player.getId(),
+                battleGrid.getMainGrid(), 100, 100, player);
+
+        if (hitSuccessful) {
+            return new HitResult(true, "Hit successful!");
+        } else {
+            return new HitResult(false, "Failed to execute hit.");
+        }
     }
 
     @Override

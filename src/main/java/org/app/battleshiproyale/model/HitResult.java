@@ -13,4 +13,6 @@ public class HitResult {
         this.cellType = cellType;
     }
 
+    public HitResult(boolean b, String s) {
+    }
 }
