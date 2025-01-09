@@ -23,7 +23,7 @@ public class BattleGrid {
     @Getter
     private final int MAIN_GRID_SIZE_X = 33;
     @Getter
-    private final int MAIN_GRID_SIZE_Y = 33;
+    private final int MAIN_GRID_SIZE_Y = 55;
     @Getter
     private final int PLAYER_GRID_SIZE = 10;
     @Getter
