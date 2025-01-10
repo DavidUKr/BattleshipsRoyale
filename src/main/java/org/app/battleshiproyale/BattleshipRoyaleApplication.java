@@ -18,11 +18,17 @@ public class BattleshipRoyaleApplication {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true); 
-        config.addAllowedOrigin("http://localhost:3000"); 
+
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://localhost:3000");  
         config.addAllowedHeader("*"); 
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config); 
+        config.addAllowedMethod("GET");   
+        config.addAllowedMethod("POST");  
+        config.addAllowedMethod("PUT");  
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("OPTIONS");
+        source.registerCorsConfiguration("/**", config);
         
         return new CorsFilter(source);
     }
