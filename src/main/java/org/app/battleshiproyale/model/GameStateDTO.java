@@ -14,4 +14,5 @@ import java.util.List;
 public class GameStateDTO {
     GridDTO mainGrid;
     List<PlayerDTO> players;
+    boolean isEnd;
 }
