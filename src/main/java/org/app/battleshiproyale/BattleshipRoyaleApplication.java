@@ -20,12 +20,17 @@ public class BattleshipRoyaleApplication {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); 
         config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("https://battleship-royale.web.app");
-        config.addAllowedOrigin("https://battleship-royale.web.app/");
-        config.addAllowedOriginPattern("https://battleship-royale.*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config); 
+        config.addAllowedOrigin("https://localhost:3000");  
+        config.addAllowedOrigin("https://battle-ship-royale.vercel.app/");
+        config.addAllowedOrigin("https://battle-ship-royale.vercel.app");
+        config.addAllowedHeader("*"); 
+        config.addAllowedMethod("GET");   
+        config.addAllowedMethod("POST");  
+        config.addAllowedMethod("PUT");  
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("OPTIONS");
+        source.registerCorsConfiguration("/**", config);
+        
         return new CorsFilter(source);
     }
 }
