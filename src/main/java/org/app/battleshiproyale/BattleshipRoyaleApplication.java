@@ -22,6 +22,8 @@ public class BattleshipRoyaleApplication {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://localhost:3000");  
+        config.addAllowedOrigin("https://battle-ship-royale.vercel.app/");
+        config.addAllowedOrigin("https://battle-ship-royale.vercel.app");
         config.addAllowedHeader("*"); 
         config.addAllowedMethod("GET");   
         config.addAllowedMethod("POST");  
