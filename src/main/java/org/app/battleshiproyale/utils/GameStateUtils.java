@@ -34,6 +34,7 @@ public class GameStateUtils {
         for (Player p : gameState.getPlayers()) {
             playerDTOs.add(playerUtils.getDTOfromPlayerWShips(p));
         }
+        gameStateDTO.setEnd(gameState.isEnd());
         return gameStateDTO;
     }
 }

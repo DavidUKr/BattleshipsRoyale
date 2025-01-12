@@ -156,7 +156,8 @@ public class GameImpl implements Game {
 
     @Override
     public GameState getGameState() {
-        return new GameState(battleGrid.getMainGrid(), players, false, battleGrid.getMAIN_GRID_SIZE_X(), battleGrid.getMAIN_GRID_SIZE_Y());
+
+        return new GameState(battleGrid.getMainGrid(), players, battleGrid.isFinished(), battleGrid.getMAIN_GRID_SIZE_X(), battleGrid.getMAIN_GRID_SIZE_Y());
     }
 
     @Override
