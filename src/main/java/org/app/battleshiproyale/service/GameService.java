@@ -25,7 +25,7 @@ public class GameService {
     }
 
     public GameStateDTO getGameState(String player_id) {
-        System.out.println("Getting game state"+player_id);
+//        System.out.println("Getting game state"+player_id);
         return gameStateUtils.getDTOfromGameState(game.getGameState(), player_id);
     }
 

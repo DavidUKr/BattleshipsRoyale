@@ -14,7 +14,7 @@ public class HitUtils {
 
         HitResultDTO hitResultDTO = new HitResultDTO();
 
-        if (hitResult.getCellType()== GridCell.CellType.UNDISCOVERED_SHIP_TEAM_1 || hitResult.getCellType()==GridCell.CellType.UNDISCOVERED_SHIP_TEAM_2)
+        if (hitResult.getCellType()== GridCell.CellType.HIT_ENEMY_SHIP)
             hitResultDTO.setHitResult(4);
         else hitResultDTO.setHitResult(0);
 

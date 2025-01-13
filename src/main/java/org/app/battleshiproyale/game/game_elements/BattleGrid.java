@@ -59,7 +59,7 @@ public class BattleGrid {
         }
     }
 
-    public void placePlayerGridOnMain(GridCell[][] playerGrid, List<BaseShip> shipsPlayer) {
+    public void placePlayerGridOnMain(GridCell[][] playerGrid, List<BaseShip> shipsPlayer, int player_index) {
         boolean isPlacedGood = false;
         int startX = -1;
         int startY = -1;
@@ -89,7 +89,22 @@ public class BattleGrid {
                 mainGrid[startX + i][startY + j] = playerGrid[i][j];
             }
         }
-        this.shipsPlayer1.addAll(shipsPlayer);
+
+        for (BaseShip ship : shipsPlayer) {
+            List<Point>coords=ship.getCoordinates();
+            List<Point> newCoords=new ArrayList<>();
+
+            for (Point point : coords) {
+                newCoords.add(new Point(point.getX()+startX, point.getY()+startY));
+            }
+
+            ship.setCoordinates(newCoords);
+        }
+
+        if(player_index==0)
+            this.shipsPlayer1.addAll(shipsPlayer);
+        else
+            this.shipsPlayer2.addAll(shipsPlayer);
     }
 
 
@@ -106,18 +121,18 @@ public class BattleGrid {
         }
     }
 
-    public boolean hit(int x, int y, Player player) {
+    public int hit(int x, int y, Player player) {
         // Validate stamina before proceeding
         final int staminaCostPerHit = 10;
         if (player.getStamina() < staminaCostPerHit) {
             System.out.printf("Player %s does not have enough stamina to execute a hit!%n", player.getId());
-            return false;
+            return -2;
         }
 
         // Validate coordinates
         if (x < 0 || x >= MAIN_GRID_SIZE_X || y < 0 || y >= MAIN_GRID_SIZE_Y) {
             System.out.println("Out of bounds: (" + x + ", " + y + ")");
-            return false;
+            return -1;
         }
 
         //TODO identify ship from ships arrays based on ship_id and call ship.apply_damage()
@@ -125,12 +140,12 @@ public class BattleGrid {
         switch (mainGrid[x][y].cellType) {
             case DISCOVERED_EMPTY:
                 System.out.println("Already hit an empty cell at (" + x + ", " + y + ")");
-                return false;
+                return 0;
 
             case DISCOVERED_SHIP_TEAM_1:
             case DISCOVERED_SHIP_TEAM_2:
                 System.out.println("Already hit a ship at (" + x + ", " + y + ")");
-                return false;
+                return 1;
 
             case UNDISCOVERED_EMPTY:
                 mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
@@ -138,7 +153,7 @@ public class BattleGrid {
                 player.decreaseStamina(staminaCostPerHit);
                 System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
                         player.getId(), staminaCostPerHit, player.getStamina());
-                return true;
+                return 0;
 
             case UNDISCOVERED_SHIP_TEAM_1:
                 for (BaseShip ship : shipsPlayer1) {
@@ -159,7 +174,7 @@ public class BattleGrid {
                 player.decreaseStamina(staminaCostPerHit);
                 System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
                         player.getId(), staminaCostPerHit, player.getStamina());
-                return true;
+                return 2;
 
             case UNDISCOVERED_SHIP_TEAM_2: // Mark as discovered ship
                for (BaseShip ship : shipsPlayer2) {
@@ -181,21 +196,21 @@ public class BattleGrid {
                 System.out.printf("Player %s stamina decreased by %d. Remaining stamina: %d.%n",
                         player.getId(), staminaCostPerHit, player.getStamina());
 
-                return true;
+                return 2;
 
             case UNDISCOVERED_PERK_1:
                 mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Discovered a perk (Type 1) at (" + x + ", " + y + ")");
-                return true;
+                return 3;
 
             case UNDISCOVERED_PERK_2:
                 mainGrid[x][y].cellType = GridCell.CellType.DISCOVERED_EMPTY;
                 System.out.println("Discovered a perk (Type 2) at (" + x + ", " + y + ")");
-                return true;
+                return 3;
 
             default:
                 System.out.println("Unknown cell type at (" + x + ", " + y + ")");
-                return false;
+                return -1;
         }
 
     }

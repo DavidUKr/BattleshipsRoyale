@@ -95,9 +95,21 @@ public class GameImpl implements Game {
                     }
                 }
             }
-            this.battleGrid.placePlayerGridOnMain(playerGrid,
-                    players.stream().filter(player -> player.getId().equals(playerId)).findFirst().get().getShips()
-            );
+            if (playerId.equals(players.get(0).getId())) {
+                players.get(0).setShips(playerMap.getShips());
+                this.battleGrid.placePlayerGridOnMain(playerGrid,
+                        players.stream().filter(player -> player.getId().equals(playerId)).findFirst().get().getShips(),
+                        0
+                );
+            }
+
+            else {
+                players.get(1).setShips(playerMap.getShips());
+                this.battleGrid.placePlayerGridOnMain(playerGrid,
+                        players.stream().filter(player -> player.getId().equals(playerId)).findFirst().get().getShips(),
+                        1
+                );
+            }
             return true;
         }
 
@@ -135,12 +147,21 @@ public class GameImpl implements Game {
             return new HitResult(GridCell.CellType.INVALID, "Player not found.");
         }
 
-        boolean hitSuccessful = battleGrid.hit(hitDTO.getX(), hitDTO.getY(), player);
+        int hitResInt = battleGrid.hit(hitDTO.getX(), hitDTO.getY(), player);
 
-        if (hitSuccessful) {
-            return new HitResult(GridCell.CellType.HIT_ENEMY_SHIP, "Hit successful!");
-        } else {
-            return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Failed to execute hit.");
+        switch (hitResInt){
+
+            case 0: return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Missed!");
+
+            case 1: return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Already hit ship!");
+
+            case 2: return new HitResult(GridCell.CellType.HIT_ENEMY_SHIP, "Hit enemy ship!");
+
+            case -1: return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Wrong input");
+
+            case -2: return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Not enough stamina");
+
+            default: return new HitResult(GridCell.CellType.DISCOVERED_EMPTY, "Error");
         }
     }
 
