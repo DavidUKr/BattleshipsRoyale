@@ -30,7 +30,7 @@ public class BattleGrid {
     @Getter
     private final int PLAYER_GRID_SIZE = 10;
     @Getter
-    private final GridCell[][] mainGrid;
+    private GridCell[][] mainGrid;
 
     private int other_player_map_x=-1;
     private int other_player_map_y=-1;
@@ -227,4 +227,7 @@ public class BattleGrid {
         return false;
     }
 
+    public void resetGrid() {
+        this.mainGrid = new GridCell[MAIN_GRID_SIZE_X][MAIN_GRID_SIZE_Y];
+    }
 }

@@ -133,6 +133,7 @@ public class GameImpl implements Game {
     @Override
     public void resetSession(){
         players.clear();
+        battleGrid.resetGrid();
     }
 
     @Override
